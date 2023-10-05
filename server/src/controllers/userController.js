@@ -1,6 +1,9 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/user');
 const { createJWT, createRefreshToken } = require('../middleware/createJWT');
+const jwt = require('jsonwebtoken')
+
+const key = "nguyenminhchienit"; // tam thoi hard code do bi loi .env
 
 const handleRegister = asyncHandler(async (req, res) => {
     const { email, password, lastName, firstName, mobile } = req.body;
@@ -85,8 +88,57 @@ const handleGetUserCurrent = asyncHandler(async (req, res) => {
     }
 })
 
+const handleRefreshToken = asyncHandler(async (req, res) => {
+    //Lay token tu cookies
+    const cookie = req.cookies;
+    //Check xem token co ton tai o cookies hay khong
+    if (!cookie || !cookie.refreshToken) {
+        throw new Error ('No refresh token in cookie')
+    }
+    //Check xem token co hop le khong
+    const rs = await jwt.verify(cookie.refreshToken, key); // dung thi tra ve decode (_id) sai thi tra ve jwt expires
+    const response = await User.findOne({ _id: rs._id, refreshToken: cookie.refreshToken })
+    if (response) {
+        const payload = {
+            _id: response._id,
+            role: response.role
+        }
+        return res.status(200).json({
+            success: response ? true : false,
+            newAccessToken: response ? createJWT(payload) : 'Refresh token not matched' 
+        })
+    } else {
+        throw new Error ('Not found user by refresh token')
+    }
+})
+
+const handleLogout = asyncHandler(async (req, res) => {
+    const cookie = req.cookies;
+    if (!cookie || !cookie.refreshToken) {
+        throw new Error ('No refresh token in cookie')
+    }
+    //Tim va xoa refresh token o db
+    await User.findOneAndUpdate({
+        refreshToken: cookie.refreshToken
+    }, { refreshToken: '' }, { new: true });
+
+    //Xoa token o cookie
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: true
+    })
+
+    return res.status(200).json({
+        success: true,
+        mes: 'Logout success'
+    })
+
+})
+
 module.exports = {
     handleRegister,
     handleLogin,
-    handleGetUserCurrent
+    handleLogout,
+    handleGetUserCurrent,
+    handleRefreshToken
 }
