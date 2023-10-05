@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'); // Erase if already required
+const bcrypt = require('bcrypt')
 
 // Declare the Schema of the Mongo model
 var userSchema = new mongoose.Schema({
@@ -60,7 +61,17 @@ var userSchema = new mongoose.Schema({
     passwordResetExpires: {
         type: String
     }
+}, {
+    timestamps: true
 });
+
+userSchema.pre('save', function (next) {
+    if (!this.isModified(this.password)) {
+        next();
+    }
+    const salt = bcrypt.genSaltSync(10);
+    this.password = bcrypt.hashSync(this.password, salt);
+})
 
 //Export the model
 module.exports = mongoose.model('User', userSchema);
