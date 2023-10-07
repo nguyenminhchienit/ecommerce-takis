@@ -1,6 +1,6 @@
 const express = require('express');
 const userController = require('../controllers/userController');
-const { verifyJWT } = require('../middleware/verifyJWT');
+const { verifyJWT, isAdmin } = require('../middleware/verifyJWT');
 
 const router = express.Router();
 
@@ -11,5 +11,9 @@ router.post('/refresh-token', userController.handleRefreshToken);
 router.get('/logout', userController.handleLogout);
 router.get('/forgot-password', userController.handleForgotPassword);
 router.put('/reset-password', userController.handleResetPassword);
+router.get('/', [verifyJWT, isAdmin], userController.handleGetAllUser);
+router.delete('/', [verifyJWT, isAdmin], userController.handleDeleteUser);
+router.put('/update-user-current', verifyJWT, userController.handleUpdateUser);
+router.put('/:_id', [verifyJWT, isAdmin], userController.handleUpdateUserByAdmin)
 
 module.exports = router

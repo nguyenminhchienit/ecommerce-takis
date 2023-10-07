@@ -195,6 +195,53 @@ const handleResetPassword = asyncHandler(async (req, res) => {
 
 })
 
+const handleGetAllUser = asyncHandler(async (req, res) => {
+    const users = await User.find().select('-password -role -refreshToken');
+    return res.status(200).json({
+        success: users ? true : false,
+        data: users
+    })
+})
+
+const handleDeleteUser = asyncHandler(async (req, res) => {
+    const { _id } = req.query;
+    if (!_id) {
+        throw new Error('Missing params');
+    }
+    const user = await User.findByIdAndDelete({ _id: _id })
+    return res.status(200).json({
+        success: user ? true : false,
+        mes: user ? `User with email ${user.email} deleted` : 'User not found'
+    })
+})
+
+const handleUpdateUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    if (!_id || Object.keys(req.body).length === 0) {
+        throw new Error('Missing input');
+    }
+    const user = await User.findByIdAndUpdate({
+        _id: _id,
+    }, req.body, { new: true }).select('-password -role -refreshToken');
+    return res.status(200).json({
+        success: user ? true : false,
+        data: user ? user : 'Something wrong'
+    })
+})
+
+const handleUpdateUserByAdmin = asyncHandler(async (req, res) => {
+    const { _id } = req.params;
+    if (!_id || Object.keys(req.body).length === 0) {
+        throw new Error('Missing input');
+    }
+    const user = await User.findByIdAndUpdate({
+        _id: _id,
+    }, req.body, { new: true }).select('-password -role -refreshToken');
+    return res.status(200).json({
+        success: user ? true : false,
+        data: user ? user : 'Something wrong'
+    })
+})
 module.exports = {
     handleRegister,
     handleLogin,
@@ -202,5 +249,9 @@ module.exports = {
     handleGetUserCurrent,
     handleRefreshToken,
     handleForgotPassword,
-    handleResetPassword
+    handleResetPassword,
+    handleGetAllUser,
+    handleDeleteUser,
+    handleUpdateUser,
+    handleUpdateUserByAdmin
 }
