@@ -1,7 +1,9 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/user');
 const { createJWT, createRefreshToken } = require('../middleware/createJWT');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const sendEmail = require('../utils/sendEmail');
+const cryptoJS = require("crypto");
 
 const key = "nguyenminhchienit"; // tam thoi hard code do bi loi .env
 
@@ -135,10 +137,70 @@ const handleLogout = asyncHandler(async (req, res) => {
 
 })
 
+const handleForgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.query;
+    if (!email) {
+        throw new Error('Missing email');
+    }
+    const user = await User.findOne({
+        email: email
+    })
+    if (!user) {
+        throw new Error('User not found');
+    }
+    const resetToken = user.createResetPasswordToken();
+
+    await user.save();
+
+    const html = `Xin vui lòng click vào link bên dưới để thay đổi mật khẩu link sẽ hết hạn sau 15p.
+    <a href=https://localhost:8888/api/v1/user/reset-password/${resetToken} >Click here</a> 
+    `
+
+    const data = {
+        email,
+        html
+    }
+
+    const result = await sendEmail(data);
+
+
+    return res.status(200).json({
+        success: true,
+        result
+    })
+})
+
+const handleResetPassword = asyncHandler(async (req, res) => {
+    const { password, token } = req.body;
+    if (!password || !token) {
+        throw new Error('Missing params');
+    }
+    const passwordResetToken = cryptoJS.createHash('sha256').update(token).digest('hex');
+    const user = await User.findOne({
+        passwordResetToken: passwordResetToken,
+        passwordResetExpires: {$gt: Date.now()} // tuc la thoi gian con song cua token la 15p
+    })
+    if (!user) {
+        throw new Error('User not found');
+    }
+    user.password = password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    user.passwordChangeAt = Date.now();
+    await user.save();
+    return res.status(200).json({
+        success: user ? true : false,
+        mes: user ? 'Change password successfully' : "Can't change password" 
+    })
+
+})
+
 module.exports = {
     handleRegister,
     handleLogin,
     handleLogout,
     handleGetUserCurrent,
-    handleRefreshToken
+    handleRefreshToken,
+    handleForgotPassword,
+    handleResetPassword
 }

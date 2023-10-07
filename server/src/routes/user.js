@@ -9,5 +9,7 @@ router.post('/login', userController.handleLogin);
 router.get('/get-user-login', verifyJWT, userController.handleGetUserCurrent);
 router.post('/refresh-token', userController.handleRefreshToken);
 router.get('/logout', userController.handleLogout);
+router.get('/forgot-password', userController.handleForgotPassword);
+router.put('/reset-password', userController.handleResetPassword);
 
 module.exports = router
