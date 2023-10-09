@@ -4,6 +4,7 @@ const { createJWT, createRefreshToken } = require('../middleware/createJWT');
 const jwt = require('jsonwebtoken');
 const sendEmail = require('../utils/sendEmail');
 const cryptoJS = require("crypto");
+const product = require('../models/product');
 
 const key = "nguyenminhchienit"; // tam thoi hard code do bi loi .env
 
