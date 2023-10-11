@@ -35,7 +35,7 @@ const handleGetAllBlog = asyncHandler(async (req, res) => {
 
 const handleLikeBlog = asyncHandler(async (req, res) => {
     const { _id } = req.user;
-    const { bid } = req.body;
+    const { bid } = req.params;
     if (!bid) {
         throw new Error('Missing input');
     }
@@ -45,10 +45,10 @@ const handleLikeBlog = asyncHandler(async (req, res) => {
     if (alreadyDisliked) {
         //Huy bo dislike
         const response = await BlogSchema.findByIdAndUpdate(bid, { $pull: { dislikes: _id } }, { new: true })
-        return res.status(200).json({
-            success: response ? true : false,
-            response
-        })
+        // return res.status(200).json({
+        //     success: response ? true : false,
+        //     response
+        // })
     }
 
     const alreadyLiked = blog?.likes?.find(el => el.toString() === _id);
@@ -68,9 +68,45 @@ const handleLikeBlog = asyncHandler(async (req, res) => {
 
 })
 
+const handleDislikeBlog = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const { bid } = req.params;
+    if (!bid) {
+        throw new Error('Missing input');
+    }
+    const blog = await BlogSchema.findById(bid);
+    //Kiem tra xem user nay da co dislike hay chua
+    const alreadyLiked = blog?.likes?.find(el => el.toString() === _id);
+    if (alreadyLiked) {
+        //Huy bo like
+        const response = await BlogSchema.findByIdAndUpdate(bid, { $pull: { likes: _id } }, { new: true })
+        // return res.status(200).json({
+        //     success: response ? true : false,
+        //     response
+        // })
+    }
+
+    const alreadyDisliked = blog?.dislikes?.find(el => el.toString() === _id);
+    if (alreadyDisliked) {
+        const response = await BlogSchema.findByIdAndUpdate(bid, { $pull: { dislikes: _id } }, { new: true })
+        return res.status(200).json({
+            success: response ? true : false,
+            response
+        })
+    } else {
+        const response = await BlogSchema.findByIdAndUpdate(bid, { $push: { dislikes: _id } }, { new: true })
+        return res.status(200).json({
+            success: response ? true : false,
+            response
+        })
+    }
+
+})
+
 module.exports = {
     handleCreateBlog,
     handleUpdateBlog,
     handleGetAllBlog,
-    handleLikeBlog
+    handleLikeBlog,
+    handleDislikeBlog
 }
