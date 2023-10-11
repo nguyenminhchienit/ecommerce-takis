@@ -103,10 +103,39 @@ const handleDislikeBlog = asyncHandler(async (req, res) => {
 
 })
 
+const handleGetOneBlog = asyncHandler(async (req, res) => {
+    const { bid } = req.params;
+    if (!bid) {
+        throw new Error('Missing input');
+    }
+    const blog = await BlogSchema.findByIdAndUpdate(bid, { $inc: { numberViews: 1 } }, { new: true })
+        .populate('likes', 'firstName lastName')
+        .populate('dislikes', 'firstName lastName')
+    return res.status(200).json({
+        success: blog ? true : false,
+        blog: blog ? blog : 'Something wrong'
+    })
+
+})
+
+const handleDeleteBlog = asyncHandler(async (req, res) => {
+    const { bid } = req.params;
+    if (!bid) {
+        throw new Error('Missing input');
+    }
+    const blog = await BlogSchema.findByIdAndDelete(bid);
+    return res.status(200).json({
+        success: blog ? true : false,
+        mes: blog ? 'Delete blog successfully' : 'Delete blog failed'
+    })
+})
+
 module.exports = {
     handleCreateBlog,
     handleUpdateBlog,
     handleGetAllBlog,
     handleLikeBlog,
-    handleDislikeBlog
+    handleDislikeBlog,
+    handleGetOneBlog,
+    handleDeleteBlog
 }
