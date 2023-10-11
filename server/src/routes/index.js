@@ -4,6 +4,8 @@ const ProductRoute = require('./product')
 const ProductCategoryRoute = require('./productCategory')
 const BlogCategoryRoute = require('./blogCategory')
 const BlogRoute = require('./blog');
+const BrandRoute = require('./brand');
+
 
 const initRoute = (app) => {
     app.use('/api/v1/user', UserRoute);
@@ -11,6 +13,7 @@ const initRoute = (app) => {
     app.use('/api/v1/product-category', ProductCategoryRoute);
     app.use('/api/v1/blog-category', BlogCategoryRoute);
     app.use('/api/v1/blog', BlogRoute);
+    app.use('/api/v1/brand', BrandRoute);
     
     //Middleware handle error
     app.use(notFound);
