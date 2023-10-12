@@ -140,9 +140,19 @@ const handleRatings = asyncHandler(async (req, res) => {
         }, {new: true})
     }
 
+    //Sum rating
+
+
     return res.status(200).json({
         success: true,
         mes: 'You had rating successfully'
+    })
+})
+
+const handleUploadImgProduct = asyncHandler(async (req, res) => {
+    console.log("Check file", req.file);
+    return res.status(200).json({
+        mes: 'OK'
     })
 })
 
@@ -152,5 +162,6 @@ module.exports = {
     handleGetAllProduct,
     handleUpdateProductById,
     handleDeleteProductById,
-    handleRatings
+    handleRatings,
+    handleUploadImgProduct
 }
