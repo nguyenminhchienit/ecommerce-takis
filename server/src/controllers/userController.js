@@ -258,6 +258,44 @@ const handleUpdateAddress = asyncHandler(async (req, res) => {
     })
 })
 
+const handleUpdateCart = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const { pid, quantity, color } = req.body;
+    if (!pid || !quantity || !color) {
+        throw new Error('Missing input');
+    }
+    const userCart = await User.findById(_id);
+    console.log("Check user in product cart: ", userCart);
+    const alreadyProduct = userCart?.cart?.find(el => el.product.toString() === pid);
+    if (alreadyProduct) {
+        if (alreadyProduct.color == color) {
+            const response = await User.updateOne({ cart: { $elemMatch: alreadyProduct } },
+                { $set: { "cart.$.quantity": +alreadyProduct.quantity + +quantity } },{new: true});
+            return res.status(200).json({
+                success: response ? true : false,
+                data: response ? response : 'Something wrong'
+            })
+        } else {
+            const response = await User.findByIdAndUpdate({
+                _id: _id,
+            }, { $push: { cart: { product: pid, quantity, color } } }, { new: true }).select('-password -role -refreshToken');
+            return res.status(200).json({
+                success: response ? true : false,
+                data: response ? response : 'Something wrong'
+            })
+        }
+    } else {
+        const response = await User.findByIdAndUpdate({
+            _id: _id,
+        }, { $push: { cart: { product: pid, quantity, color } } }, { new: true }).select('-password -role -refreshToken');
+        return res.status(200).json({
+            success: response ? true : false,
+            data: response ? response : 'Something wrong'
+        })
+    }
+    
+})
+
 
 module.exports = {
     handleRegister,
@@ -271,5 +309,6 @@ module.exports = {
     handleDeleteUser,
     handleUpdateUser,
     handleUpdateUserByAdmin,
-    handleUpdateAddress
+    handleUpdateAddress,
+    handleUpdateCart
 }

@@ -15,6 +15,7 @@ router.get('/', [verifyJWT, isAdmin], userController.handleGetAllUser);
 router.delete('/', [verifyJWT, isAdmin], userController.handleDeleteUser);
 router.put('/update-user-current', verifyJWT, userController.handleUpdateUser);
 router.put('/update-address', verifyJWT, userController.handleUpdateAddress);
+router.put('/update-cart', verifyJWT, userController.handleUpdateCart);
 router.put('/:_id', [verifyJWT, isAdmin], userController.handleUpdateUserByAdmin)
 
 module.exports = router
