@@ -130,6 +130,19 @@ const handleDeleteBlog = asyncHandler(async (req, res) => {
     })
 })
 
+const handleUploadImgBlog = asyncHandler(async (req, res) => {
+    const { bid } = req.params;
+    if (!bid || !req.file) {
+        throw new Error('Missing params');
+    }
+    const uploadBlog = await BlogSchema.findByIdAndUpdate(bid, { image: req.file.path }, { new: true });
+
+    return res.status(200).json({
+        success: uploadBlog ? true : false,
+        data: uploadBlog ? uploadBlog : "Can't upload image for blog"
+    })
+})
+
 module.exports = {
     handleCreateBlog,
     handleUpdateBlog,
@@ -137,5 +150,6 @@ module.exports = {
     handleLikeBlog,
     handleDislikeBlog,
     handleGetOneBlog,
-    handleDeleteBlog
+    handleDeleteBlog,
+    handleUploadImgBlog
 }

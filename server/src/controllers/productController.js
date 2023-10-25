@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Product = require('../models/product');
-const slugify = require('slugify')
+const slugify = require('slugify');
+const { isObjectIdOrHexString } = require('mongoose');
 
 const handleCreateProduct = asyncHandler(async (req, res) => {
     if (Object.keys(req.body).length === 0) {
@@ -141,8 +142,12 @@ const handleRatings = asyncHandler(async (req, res) => {
     }
 
     //Sum rating
+    const updateProduct = await Product.findById(pid);
+    const ratingCount = updateProduct.rating.length;
+    const sumRating = updateProduct.rating.reduce((sum, ele) => sum + ele.star, 0);
+    updateProduct.totalRating = Math.round(sumRating * 10 / ratingCount) / 10;
 
-
+    await updateProduct.save();
     return res.status(200).json({
         success: true,
         mes: 'You had rating successfully'
@@ -150,9 +155,16 @@ const handleRatings = asyncHandler(async (req, res) => {
 })
 
 const handleUploadImgProduct = asyncHandler(async (req, res) => {
-    console.log("Check file", req.file);
+    const { pid } = req.params;
+    if (!req.files || !pid) {
+        throw new Error('Missing input');
+    }
+    const response = await Product.findByIdAndUpdate(pid, {
+        $push: { images: { $each: req.files.map(el => el.path) } }
+    }, { new: true });
     return res.status(200).json({
-        mes: 'OK'
+        success: response ? true : false,
+        data: response ? response : "Can't upload images products"
     })
 })
 
