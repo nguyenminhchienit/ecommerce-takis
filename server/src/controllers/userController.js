@@ -243,6 +243,22 @@ const handleUpdateUserByAdmin = asyncHandler(async (req, res) => {
         data: user ? user : 'Something wrong'
     })
 })
+
+const handleUpdateAddress = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    if (!req.body.address) {
+        throw new Error('Missing input');
+    }
+    const user = await User.findByIdAndUpdate({
+        _id: _id,
+    }, {$push: {address: req.body.address}}, { new: true }).select('-password -role -refreshToken');
+    return res.status(200).json({
+        success: user ? true : false,
+        data: user ? user : 'Something wrong'
+    })
+})
+
+
 module.exports = {
     handleRegister,
     handleLogin,
@@ -254,5 +270,6 @@ module.exports = {
     handleGetAllUser,
     handleDeleteUser,
     handleUpdateUser,
-    handleUpdateUserByAdmin
+    handleUpdateUserByAdmin,
+    handleUpdateAddress
 }
