@@ -1,0 +1,6 @@
+###
+POST http://localhost:8888/api/v1/insert
+
+###
+POST http://localhost:8888/api/v1/insert/cate
+
