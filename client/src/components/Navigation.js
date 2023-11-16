@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 
 const Navigation = () => {
   return (
-    <div className="w-main h-[30px] py-2 gap-8 flex items-center text-sm">
+    <div className="w-main border-y h-[30px] py-2 gap-8 flex items-center text-sm">
       {navigation.map((item) => {
         return (
           <NavLink
