@@ -5,7 +5,7 @@ import path from "./utils/path";
 
 function App() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen font-main">
       <Routes>
         <Route path={path.PUBLIC} element={<Public />}>
           <Route path={path.HOME} element={<Home />} />

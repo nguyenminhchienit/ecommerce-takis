@@ -24,7 +24,7 @@ const handleGetProductById = asyncHandler(async (req, res) => {
   const product = await Product.findById({ _id: pid });
   return res.status(200).json({
     success: product ? true : false,
-    data: product ? product : "Get a product failed",
+    product: product ? product : "Get a product failed",
   });
 });
 
@@ -73,7 +73,7 @@ const handleGetAllProduct = asyncHandler(async (req, res) => {
       const counts = await Product.find(formatQuery).countDocuments();
       return res.status(200).json({
         success: products ? true : false,
-        data: products ? products : "Get all product failed",
+        products: products ? products : "Get all product failed",
         counts,
       });
     })
