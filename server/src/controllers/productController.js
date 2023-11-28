@@ -63,7 +63,7 @@ const handleGetAllProduct = asyncHandler(async (req, res) => {
 
   //Pagination
   const page = +req.query.page * 1 || 1; // so count truyen vao
-  const limit = +req.query.limit * 1 || 2;
+  const limit = +req.query.limit * 1 || 10; //(tham so limit);
   const skip = (page - 1) * limit;
 
   queryCommand = queryCommand.skip(skip).limit(limit);

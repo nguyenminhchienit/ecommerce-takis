@@ -6,7 +6,7 @@ const data = require("../../../data/data2.json");
 const dataCate = require("../../../data/cate_brand");
 
 const fProduct = asyncHandler(async (p) => {
-  await ProductCategory.create({
+  await Product.create({
     title: p?.name,
     slug: slugify(p?.name) + Math.round(Math.random() * 100) + "",
     description: p?.description,
@@ -17,6 +17,8 @@ const fProduct = asyncHandler(async (p) => {
     sold: Math.round(Math.random() * 100),
     images: p?.images,
     color: p?.variants?.find((el) => el.label === "Color")?.variants[0],
+    thumb: p?.thumb,
+    totalRating: Math.round(Math.random() * 5),
   });
 });
 

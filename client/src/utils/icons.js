@@ -2,9 +2,11 @@ import { MdLocalPhone } from "react-icons/md";
 import { IoMdMail } from "react-icons/io";
 import { BsFillHandbagFill } from "react-icons/bs";
 import { HiMiniUserCircle } from "react-icons/hi2";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaStar, FaHeart } from "react-icons/fa";
 import { TbCategoryFilled } from "react-icons/tb";
-import { MdOutlineStart } from "react-icons/md";
+import { MdOutlineStart, MdMenuBook } from "react-icons/md";
+import { CiStar } from "react-icons/ci";
+import { IoEyeSharp } from "react-icons/io5";
 
 const icons = {
   MdLocalPhone,
@@ -14,6 +16,11 @@ const icons = {
   FaHome,
   TbCategoryFilled,
   MdOutlineStart,
+  CiStar,
+  FaStar,
+  FaHeart,
+  IoEyeSharp,
+  MdMenuBook,
 };
 
 export default icons;

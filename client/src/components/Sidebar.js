@@ -17,11 +17,10 @@ const Sidebar = () => {
         {categories &&
           categories?.map((item) => {
             return (
-              <div className="flex gap-6 items-center">
+              <div className="flex gap-6 items-center" key={item._id}>
                 <MdOutlineStart />
                 <NavLink
                   to={item.slug}
-                  key={item._id}
                   className={({ isActive }) =>
                     isActive
                       ? "hover:text-main text-main uppercase"

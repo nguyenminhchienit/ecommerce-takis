@@ -1,37 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as actions from "./asyncActions";
 
-const appSlice = createSlice({
-  name: "app",
+const productSlice = createSlice({
+  name: "product",
   initialState: {
     isLoading: false,
-    categories: [],
+    newProducts: [],
+    errorMessage: "",
   },
   reducers: {},
   // Code logic xử lý async action
   extraReducers: (builder) => {
     // Bắt đầu thực hiện action login (Promise pending)
-    builder.addCase(actions.apiGetCategories.pending, (state) => {
+    builder.addCase(actions.apiGetNewProducts.pending, (state) => {
       // Bật trạng thái loading
       state.isLoading = true;
     });
 
     // Khi thực hiện action login thành công (Promise fulfilled)
-    builder.addCase(actions.apiGetCategories.fulfilled, (state, action) => {
+    builder.addCase(actions.apiGetNewProducts.fulfilled, (state, action) => {
       // Tắt trạng thái loading, lưu thông tin user vào store
-      console.log(action);
+      //console.log(action);
       state.isLoading = false;
-      state.categories = action.payload;
+      state.newProducts = action.payload;
     });
 
     // Khi thực hiện action login thất bại (Promise rejected)
-    builder.addCase(actions.apiGetCategories.rejected, (state, action) => {
+    builder.addCase(actions.apiGetNewProducts.rejected, (state, action) => {
       // Tắt trạng thái loading, lưu thông báo lỗi vào store
       state.isLoading = false;
-      state.errorMessage = action.payload.message;
+      state.errorMessage = action.payload;
     });
   },
 });
 
-export const {} = appSlice.actions;
-export default appSlice.reducer;
+// export const {} = appSlice.actions;
+export default productSlice.reducer;

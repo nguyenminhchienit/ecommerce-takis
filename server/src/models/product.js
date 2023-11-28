@@ -30,6 +30,10 @@ var productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    thumb: {
+      type: String,
+      required: true,
+    },
     quantity: {
       type: Number,
       default: 0,

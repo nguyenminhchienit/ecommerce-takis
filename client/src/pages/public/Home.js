@@ -1,18 +1,33 @@
 import React from "react";
-import { Sidebar, Banner } from "../../components";
+import {
+  Sidebar,
+  Banner,
+  BestSeller,
+  DealDaily,
+  ProductFeature,
+} from "../../components";
+import ArrivalsProduct from "../../components/ArrivalsProduct";
 
 const Home = () => {
   return (
-    <div className="w-main flex mt-5">
-      <div className="flex flex-col gap-3 w-[20%] flex-auto">
-        <Sidebar />
-        <span>Deal Daily</span>
+    <>
+      <div className="w-main flex mt-5">
+        <div className="flex flex-col gap-3 w-[25%] flex-auto">
+          <Sidebar />
+          <DealDaily />
+        </div>
+        <div className="flex flex-col gap-3 w-[75%] flex-auto pl-3">
+          <Banner />
+          <BestSeller />
+        </div>
       </div>
-      <div className="flex flex-col gap-3 w-[80%] flex-auto pl-3">
-        <Banner />
-        <span>Best Seller</span>
+      <div>
+        <ProductFeature />
       </div>
-    </div>
+      <div className="">
+        <ArrivalsProduct />
+      </div>
+    </>
   );
 };
 
