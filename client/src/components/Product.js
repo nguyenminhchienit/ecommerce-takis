@@ -3,12 +3,15 @@ import formatPrice from "../utils/formatPrice";
 import { renderStarProduct } from "../utils/helpers";
 import SelectOption from "./SelectOption";
 import icons from "../utils/icons";
+import { Link } from "react-router-dom";
+import path from "../utils/path";
 
 const Product = ({ data }) => {
   const { MdMenuBook, IoEyeSharp, FaHeart } = icons;
   const [options, setOptions] = useState(false);
   return (
-    <div
+    <Link
+      to={`/${path.DETAIL_PRODUCT}/${data?._id}/${data?.title}`}
       className="flex flex-col border"
       onMouseEnter={() => setOptions(true)}
       onMouseLeave={() => setOptions(false)}
@@ -39,7 +42,7 @@ const Product = ({ data }) => {
         </span>
         <span>{formatPrice(data.price)}</span>
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Sidebar = () => {
-  const { TbCategoryFilled, MdOutlineStart } = icons;
+  const { TbCategoryFilled, IoIosArrowForward } = icons;
   const { categories } = useSelector((state) => state.app);
   return (
     <div className="border">
@@ -18,7 +18,7 @@ const Sidebar = () => {
           categories?.map((item) => {
             return (
               <div className="flex gap-6 items-center" key={item._id}>
-                <MdOutlineStart />
+                <IoIosArrowForward />
                 <NavLink
                   to={item.slug}
                   className={({ isActive }) =>
