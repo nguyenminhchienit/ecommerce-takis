@@ -1,5 +1,5 @@
 import { MdLocalPhone } from "react-icons/md";
-import { IoMdMail } from "react-icons/io";
+import { IoMdMail, IoIosArrowForward } from "react-icons/io";
 import { BsFillHandbagFill } from "react-icons/bs";
 import { HiMiniUserCircle } from "react-icons/hi2";
 import { FaHome, FaStar, FaHeart } from "react-icons/fa";
@@ -21,6 +21,7 @@ const icons = {
   FaHeart,
   IoEyeSharp,
   MdMenuBook,
+  IoIosArrowForward,
 };
 
 export default icons;

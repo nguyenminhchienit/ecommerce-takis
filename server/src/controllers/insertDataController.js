@@ -36,6 +36,7 @@ const fCate = asyncHandler(async (c) => {
   await ProductCategory.create({
     title: c?.cate,
     brand: c?.brand,
+    image: c?.image,
     slug: slugify(c?.cate) + Math.round(Math.random() * 100) + "",
   });
 });

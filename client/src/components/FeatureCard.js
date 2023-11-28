@@ -10,7 +10,7 @@ const FeatureCard = ({ title, image, totalRating, price }) => {
         <div className="p-4 flex flex-col text-base">
           <span className="line-clamp-1 uppercase">{title}</span>
           <span className="flex py-2">
-            {renderStarProduct(totalRating)?.map((item, index) => (
+            {renderStarProduct(totalRating, 12)?.map((item, index) => (
               <span key={index}>{item}</span>
             ))}
           </span>

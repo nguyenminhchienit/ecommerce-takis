@@ -7,6 +7,7 @@ import {
   ProductFeature,
 } from "../../components";
 import ArrivalsProduct from "../../components/ArrivalsProduct";
+import HotCollection from "../../components/HotCollection";
 
 const Home = () => {
   return (
@@ -26,6 +27,9 @@ const Home = () => {
       </div>
       <div className="">
         <ArrivalsProduct />
+      </div>
+      <div className="">
+        <HotCollection />
       </div>
     </>
   );
