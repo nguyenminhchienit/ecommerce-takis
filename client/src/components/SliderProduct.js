@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Slider from "react-slick";
 import Product from "./Product";
 const settings = {
@@ -23,4 +23,4 @@ const SliderProduct = ({ products }) => {
   );
 };
 
-export default SliderProduct;
+export default memo(SliderProduct);

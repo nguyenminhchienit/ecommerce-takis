@@ -26,8 +26,11 @@ const HotCollection = () => {
                     {item.title}
                   </span>
                   <ul className="inline-block">
-                    {item?.brand?.map((item) => (
-                      <span className="flex gap-2 items-center text-gray-500 cursor-pointer hover:text-main">
+                    {item?.brand?.map((item, index) => (
+                      <span
+                        key={index}
+                        className="flex gap-2 items-center text-gray-500 cursor-pointer hover:text-main"
+                      >
                         <IoIosArrowForward size={12} />
                         <li className="text-sm ">{item}</li>
                       </span>

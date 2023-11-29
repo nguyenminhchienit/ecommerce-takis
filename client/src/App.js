@@ -20,11 +20,10 @@ function App() {
     dispatch(apiGetCategories());
   }, []);
   return (
-    <div className="min-h-screen font-main h-[2000px]">
+    <div className="min-h-screen font-main">
       <Routes>
         <Route path={path.PUBLIC} element={<Public />}>
           <Route path={path.HOME} element={<Home />} />
-          <Route path={path.LOGIN} element={<Login />} />
           <Route path={path.BLOG} element={<Blogs />} />
           <Route path={path.PRODUCT} element={<Products />} />
           <Route path={path.FAQs} element={<FAQ />} />
@@ -34,6 +33,7 @@ function App() {
             element={<DetailProduct />}
           />
         </Route>
+        <Route path={path.LOGIN} element={<Login />} />
       </Routes>
     </div>
   );
