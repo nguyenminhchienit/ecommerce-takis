@@ -1,16 +1,76 @@
 import React, { useState, useCallback } from "react";
 import { InputField, Button } from "../../components";
+import { apiLogin, apiRegister } from "../../api/user";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import path from "../../utils/path";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../store/user/userSlice";
 
 const Login = () => {
   const [payload, setPayload] = useState({
     email: "",
-    name: "",
+    firstName: "",
+    lastName: "",
     password: "",
+    mobile: "",
   });
   const [isRegister, setIsRegister] = useState(false);
-  const handleSubmit = useCallback(() => {
-    console.log("Check payload: ", payload);
-  }, [payload]);
+  const resetPayload = () => {
+    setPayload({
+      email: "",
+      firstName: "",
+      lastName: "",
+      password: "",
+      mobile: "",
+    });
+  };
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLoggedIn, current } = useSelector((state) => state.user);
+  console.log({ isLoggedIn, current });
+
+  const handleSubmit = useCallback(async () => {
+    const { firstName, lastName, ...data } = payload;
+    if (isRegister) {
+      const response = await apiRegister(payload);
+      if (response?.success) {
+        Swal.fire({
+          title: "You had register successfully",
+          text: response?.mes,
+          icon: "success",
+        }).then(() => {
+          setIsRegister(false);
+          resetPayload();
+        });
+      } else {
+        Swal.fire({
+          title: "Oops",
+          text: response?.mes,
+          icon: "error",
+        });
+      }
+    } else {
+      const response = await apiLogin(data);
+      if (response?.success) {
+        dispatch(
+          register({
+            isLoggedIn: true,
+            token: response.access_token,
+            userData: response.data,
+          })
+        );
+        navigate(`/${path.HOME}`);
+      } else {
+        Swal.fire({
+          title: "Oops",
+          text: response?.mes,
+          icon: "error",
+        });
+      }
+    }
+  }, [payload, isRegister]);
   return (
     <div className="relative">
       <img
@@ -25,12 +85,20 @@ const Login = () => {
           </h1>
 
           {isRegister && (
-            <InputField
-              type={"text"}
-              nameKey={`name`}
-              value={payload.name}
-              setValue={setPayload}
-            />
+            <div className="flex items-center gap-2">
+              <InputField
+                type={"text"}
+                nameKey={`firstName`}
+                value={payload.firstName}
+                setValue={setPayload}
+              />
+              <InputField
+                type={"text"}
+                nameKey={`lastName`}
+                value={payload.lastName}
+                setValue={setPayload}
+              />
+            </div>
           )}
           <InputField
             type={"email"}
@@ -38,6 +106,14 @@ const Login = () => {
             value={payload.email}
             setValue={setPayload}
           />
+          {isRegister && (
+            <InputField
+              type={"mobile"}
+              nameKey={`mobile`}
+              value={payload.mobile}
+              setValue={setPayload}
+            />
+          )}
           <InputField
             type={"password"}
             nameKey={`password`}
