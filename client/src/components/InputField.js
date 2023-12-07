@@ -10,8 +10,9 @@ const InputField = ({
 }) => {
   const [isHover, setIsHover] = useState(false);
   const customNameKey = nameKey?.slice(0, 1).toUpperCase() + nameKey?.slice(1);
+  console.log(inValidField);
   return (
-    <div className="w-full my-4 relative">
+    <div className="w-full mb-4 relative">
       {isHover && (
         <label
           className="text-[12px] absolute animate-slide-top-sm top-[-10px] left-[12px] block bg-white px-2"
@@ -28,9 +29,17 @@ const InputField = ({
         onChange={(e) =>
           setValue((prev) => ({ ...prev, [nameKey]: e.target.value }))
         }
-        onFocus={() => setIsHover(true)}
+        onFocus={() => {
+          setIsHover(true);
+          setInValidField([]);
+        }}
         onBlur={() => setIsHover(false)}
       />
+      {inValidField?.some((item) => item.name === nameKey) && (
+        <small className="text-red-600 italic ml-1">
+          {inValidField?.find((item) => item.name === nameKey).mes}
+        </small>
+      )}
     </div>
   );
 };

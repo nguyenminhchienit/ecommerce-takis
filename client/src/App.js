@@ -9,6 +9,8 @@ import {
   Products,
   DetailProduct,
   FAQ,
+  RedirectRegister,
+  ResetPassword,
 } from "./pages/public";
 import path from "./utils/path";
 import { apiGetCategories } from "./store/app/asyncActions";
@@ -34,6 +36,8 @@ function App() {
           />
         </Route>
         <Route path={path.LOGIN} element={<Login />} />
+        <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
+        <Route path={path.REDIRECT_REGISTER} element={<RedirectRegister />} />
       </Routes>
     </div>
   );

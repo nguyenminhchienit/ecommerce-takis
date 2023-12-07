@@ -4,7 +4,8 @@ const { createJWT, createRefreshToken } = require("../middleware/createJWT");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendEmail");
 const cryptoJS = require("crypto");
-const product = require("../models/product");
+const Product = require("../models/product");
+const makeToken = require("uniqid");
 
 const key = "nguyenminhchienit"; // tam thoi hard code do bi loi .env
 
@@ -26,6 +27,69 @@ const handleRegister = asyncHandler(async (req, res) => {
       mes: response ? "Register user successfully" : "Something wrong",
     });
   }
+});
+
+const handleRegisterWithAuthEMail = asyncHandler(async (req, res) => {
+  const { email, password, lastName, firstName, mobile } = req.body;
+  if (!email || !password || !lastName || !firstName || !mobile) {
+    return res.status(400).json({
+      success: false,
+      mes: "Missing params",
+    });
+  }
+  const user = await User.findOne({ email: email });
+  if (user) {
+    throw new Error("User has existed");
+  } else {
+    const makeTokenID = await makeToken();
+    res.cookie(
+      "dataRegister",
+      { ...req.body, makeTokenID },
+      { httpOnly: true, maxAge: 15 * 60 * 1000 }
+    );
+    console.log(makeTokenID);
+    const html = `Xin vui lòng click vào link bên dưới để hoàn tất đăng ký link sẽ hết hạn sau 15p.
+    <a href=http://localhost:8888/api/v1/user/final-create-account/${makeTokenID} >Click here</a> 
+    `;
+
+    const data = {
+      email,
+      html,
+      subject: "Xác thực tài khoản",
+    };
+
+    const result = await sendEmail(data);
+    return res.status(200).json({
+      success: true,
+      mes: "Please check your email to active account.",
+    });
+  }
+});
+
+const handleFinalRegister = asyncHandler(async (req, res) => {
+  const cookie = req.cookies;
+  console.log(cookie);
+  const { email, firstName, lastName, mobile, password, makeTokenID } =
+    cookie?.dataRegister;
+  const { token } = req.params;
+  console.log("Check token: ", token);
+  if (!cookie || cookie?.dataRegister?.makeTokenID !== token) {
+    res.clearCookie("dataRegister");
+    return res.redirect("http://localhost:3000/final-create-account/false");
+  } else {
+    const user = await User.create({
+      email,
+      firstName,
+      lastName,
+      password,
+      mobile,
+    });
+    res.clearCookie("dataRegister");
+    if (user) {
+      return res.redirect("http://localhost:3000/final-create-account/true");
+    }
+  }
+  return res.redirect("http://localhost:3000/final-create-account/false");
 });
 
 //Refresh token: cap token moi
@@ -154,7 +218,7 @@ const handleLogout = asyncHandler(async (req, res) => {
 });
 
 const handleForgotPassword = asyncHandler(async (req, res) => {
-  const { email } = req.query;
+  const { email } = req.body;
   if (!email) {
     throw new Error("Missing email");
   }
@@ -169,7 +233,7 @@ const handleForgotPassword = asyncHandler(async (req, res) => {
   await user.save();
 
   const html = `Xin vui lòng click vào link bên dưới để thay đổi mật khẩu link sẽ hết hạn sau 15p.
-    <a href=https://localhost:8888/api/v1/user/reset-password/${resetToken} >Click here</a> 
+    <a href=http://localhost:3000/reset-password/${resetToken} >Click here</a> 
     `;
 
   const data = {
@@ -187,6 +251,7 @@ const handleForgotPassword = asyncHandler(async (req, res) => {
 
 const handleResetPassword = asyncHandler(async (req, res) => {
   const { password, token } = req.body;
+  console.log(password, token);
   if (!password || !token) {
     throw new Error("Missing params");
   }
@@ -350,4 +415,6 @@ module.exports = {
   handleUpdateUserByAdmin,
   handleUpdateAddress,
   handleUpdateCart,
+  handleRegisterWithAuthEMail,
+  handleFinalRegister,
 };

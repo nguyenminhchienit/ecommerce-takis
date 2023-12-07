@@ -1,11 +1,12 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { InputField, Button } from "../../components";
-import { apiLogin, apiRegister } from "../../api/user";
+import { apiLogin, apiRegister, apiForgotPassword } from "../../api/user";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../store/user/userSlice";
+import { validate } from "../../utils/helpers";
 
 const Login = () => {
   const [payload, setPayload] = useState({
@@ -16,6 +17,9 @@ const Login = () => {
     mobile: "",
   });
   const [isRegister, setIsRegister] = useState(false);
+  const [inValidField, setInValidField] = useState([]);
+  const [isShowForgotPassword, setIsShowForgotPassword] = useState(false);
+
   const resetPayload = () => {
     setPayload({
       email: "",
@@ -31,123 +35,192 @@ const Login = () => {
   const { isLoggedIn, current } = useSelector((state) => state.user);
   console.log({ isLoggedIn, current });
 
+  const handleForgotPassword = async () => {
+    const response = await apiForgotPassword(payload);
+    if (response?.success) {
+      Swal.fire({
+        title: "Kiểm tra email để thay đổi mật khẩu",
+        icon: "success",
+      }).then(() => {
+        resetPayload();
+      });
+    }
+  };
+
+  useEffect(() => {
+    resetPayload();
+    setInValidField([]);
+  }, [isRegister]);
+
   const handleSubmit = useCallback(async () => {
-    const { firstName, lastName, ...data } = payload;
-    if (isRegister) {
-      const response = await apiRegister(payload);
-      if (response?.success) {
-        Swal.fire({
-          title: "You had register successfully",
-          text: response?.mes,
-          icon: "success",
-        }).then(() => {
-          setIsRegister(false);
-          resetPayload();
-        });
+    const { firstName, lastName, mobile, ...data } = payload;
+    const invalids = isRegister
+      ? validate(payload, setInValidField)
+      : validate(data, setInValidField);
+    if (invalids === 0) {
+      if (isRegister) {
+        const response = await apiRegister(payload);
+        if (response?.success) {
+          Swal.fire({
+            title: "You had register successfully",
+            text: response?.mes,
+            icon: "success",
+          }).then(() => {
+            setIsRegister(false);
+            resetPayload();
+          });
+        } else {
+          Swal.fire({
+            title: "Oops",
+            text: response?.mes,
+            icon: "error",
+          });
+        }
       } else {
-        Swal.fire({
-          title: "Oops",
-          text: response?.mes,
-          icon: "error",
-        });
-      }
-    } else {
-      const response = await apiLogin(data);
-      if (response?.success) {
-        dispatch(
-          register({
-            isLoggedIn: true,
-            token: response.access_token,
-            userData: response.data,
-          })
-        );
-        navigate(`/${path.HOME}`);
-      } else {
-        Swal.fire({
-          title: "Oops",
-          text: response?.mes,
-          icon: "error",
-        });
+        const response = await apiLogin(data);
+        if (response?.success) {
+          dispatch(
+            register({
+              isLoggedIn: true,
+              token: response.access_token,
+              userData: response.data,
+            })
+          );
+          navigate(`/${path.HOME}`);
+        } else {
+          Swal.fire({
+            title: "Oops",
+            text: response?.mes,
+            icon: "error",
+          });
+        }
       }
     }
   }, [payload, isRegister]);
   return (
-    <div className="relative">
-      <img
-        src="https://static.vecteezy.com/system/resources/previews/005/454/932/original/mobile-phone-represent-of-front-of-shop-store-shopping-online-on-website-or-mobile-application-concept-marketing-and-digital-marketing-free-vector.jpg"
-        alt="background"
-        className="object-cover w-screen h-screen"
-      />
-      <div className="absolute top-0 right-0 bottom-0 left-1/2 flex items-center justify-center">
-        <div className="bg-white min-w-[500px] p-8 rounded-md">
-          <h1 className="text-main font-semibold text-[20px] text-center">
-            {isRegister ? "Register" : "Login"}
-          </h1>
+    <div>
+      <div className="relative">
+        <img
+          src="https://static.vecteezy.com/system/resources/previews/005/454/932/original/mobile-phone-represent-of-front-of-shop-store-shopping-online-on-website-or-mobile-application-concept-marketing-and-digital-marketing-free-vector.jpg"
+          alt="background"
+          className="object-cover w-screen h-screen"
+        />
+        <div className="absolute top-0 right-0 bottom-0 left-1/2 flex items-center justify-center">
+          <div className="bg-white w-[500px] p-8 rounded-md">
+            {!isShowForgotPassword ? (
+              <div>
+                <h1 className="text-main font-semibold text-[20px] text-center mb-4">
+                  {isRegister ? "Register" : "Login"}
+                </h1>
 
-          {isRegister && (
-            <div className="flex items-center gap-2">
-              <InputField
-                type={"text"}
-                nameKey={`firstName`}
-                value={payload.firstName}
-                setValue={setPayload}
-              />
-              <InputField
-                type={"text"}
-                nameKey={`lastName`}
-                value={payload.lastName}
-                setValue={setPayload}
-              />
-            </div>
-          )}
-          <InputField
-            type={"email"}
-            nameKey={`email`}
-            value={payload.email}
-            setValue={setPayload}
-          />
-          {isRegister && (
-            <InputField
-              type={"mobile"}
-              nameKey={`mobile`}
-              value={payload.mobile}
-              setValue={setPayload}
-            />
-          )}
-          <InputField
-            type={"password"}
-            nameKey={`password`}
-            value={payload.password}
-            setValue={setPayload}
-          />
+                {isRegister && (
+                  <div className="flex items-center gap-2">
+                    <InputField
+                      type={"text"}
+                      nameKey={`firstName`}
+                      value={payload.firstName}
+                      setValue={setPayload}
+                      inValidField={inValidField}
+                      setInValidField={setInValidField}
+                    />
+                    <InputField
+                      type={"text"}
+                      nameKey={`lastName`}
+                      value={payload.lastName}
+                      setValue={setPayload}
+                      inValidField={inValidField}
+                      setInValidField={setInValidField}
+                    />
+                  </div>
+                )}
+                <InputField
+                  type={"email"}
+                  nameKey={`email`}
+                  value={payload.email}
+                  setValue={setPayload}
+                  inValidField={inValidField}
+                  setInValidField={setInValidField}
+                />
+                {isRegister && (
+                  <InputField
+                    type={"mobile"}
+                    nameKey={`mobile`}
+                    value={payload.mobile}
+                    setValue={setPayload}
+                    inValidField={inValidField}
+                    setInValidField={setInValidField}
+                  />
+                )}
+                <InputField
+                  type={"password"}
+                  nameKey={`password`}
+                  value={payload.password}
+                  setValue={setPayload}
+                  inValidField={inValidField}
+                  setInValidField={setInValidField}
+                />
 
-          <Button
-            name={isRegister ? "Register" : "Login"}
-            handleOnClick={handleSubmit}
-            fw={true}
-          />
+                <Button
+                  name={isRegister ? "Register" : "Login"}
+                  handleOnClick={handleSubmit}
+                  fw={true}
+                />
 
-          <div className="flex justify-between items-center mt-3 text-sm">
-            {!isRegister && (
-              <span className="text-blue-500 hover:underline cursor-pointer">
-                Forgot your account?
-              </span>
-            )}
-            {!isRegister && (
-              <span
-                className="text-blue-500 hover:underline cursor-pointer"
-                onClick={() => setIsRegister(true)}
-              >
-                Create account
-              </span>
-            )}
-            {isRegister && (
-              <span
-                className="text-blue-500 hover:underline cursor-pointer w-full text-center"
-                onClick={() => setIsRegister(false)}
-              >
-                Go to login
-              </span>
+                <div className="flex justify-between items-center mt-3 text-sm">
+                  {!isRegister && (
+                    <span
+                      className="text-blue-500 hover:underline cursor-pointer 
+                    "
+                      onClick={() => setIsShowForgotPassword(true)}
+                    >
+                      Forgot your account?
+                    </span>
+                  )}
+                  {!isRegister && (
+                    <span
+                      className="text-blue-500 hover:underline cursor-pointer"
+                      onClick={() => setIsRegister(true)}
+                    >
+                      Create account
+                    </span>
+                  )}
+                  {isRegister && (
+                    <span
+                      className="text-blue-500 hover:underline cursor-pointer w-full text-center"
+                      onClick={() => setIsRegister(false)}
+                    >
+                      Go to login
+                    </span>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col justify-between items-center">
+                <h1 className="text-main font-semibold text-[20px] text-center">
+                  {"Forgot password"}
+                </h1>
+
+                <InputField
+                  type={"email"}
+                  nameKey={`email`}
+                  value={payload.email}
+                  setValue={setPayload}
+                  inValidField={inValidField}
+                  setInValidField={setInValidField}
+                />
+
+                <Button
+                  name={"Submit"}
+                  handleOnClick={handleForgotPassword}
+                  fw={true}
+                />
+                <span
+                  className="text-blue-500 hover:underline cursor-pointer w-full mt-3 text-center"
+                  onClick={() => setIsShowForgotPassword(false)}
+                >
+                  Go to login
+                </span>
+              </div>
             )}
           </div>
         </div>
