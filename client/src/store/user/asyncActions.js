@@ -1,15 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { apiGetProducts } from "../../api/product";
+import { apiGetCurrent } from "../../api/user";
 
-export const apiGetNewProducts = createAsyncThunk(
-  "product/newProduct",
+export const apiGetUserCurrent = createAsyncThunk(
+  "user/current",
   async (data, { rejectWithValue }) => {
     // Gọi lên API backend
-    const response = await apiGetProducts({ sort: "-createdAt" });
+    const response = await apiGetCurrent();
     // console.log(response);
     if (!response?.success) {
       return rejectWithValue(response);
     }
-    return response.products;
+    return response.data;
   }
 );

@@ -11,7 +11,7 @@ const Product = ({ data }) => {
   const [options, setOptions] = useState(false);
   return (
     <Link
-      to={`/${path.DETAIL_PRODUCT}/${data?._id}/${data?.title}`}
+      to={`/${path.DETAIL_PRODUCT}/${data?.category}/${data?._id}/${data?.title}`}
       className="flex flex-col border"
       onMouseEnter={() => setOptions(true)}
       onMouseLeave={() => setOptions(false)}

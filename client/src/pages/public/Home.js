@@ -12,7 +12,7 @@ import HotCollection from "../../components/HotCollection";
 const Home = () => {
   return (
     <>
-      <div className="w-main flex mt-5">
+      <div className="w-full flex mt-5">
         <div className="flex flex-col gap-3 w-[25%] flex-auto">
           <Sidebar />
           <DealDaily />

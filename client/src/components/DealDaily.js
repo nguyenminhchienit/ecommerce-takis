@@ -21,7 +21,7 @@ const DealDaily = () => {
       page: Math.round(Math.random() * 5),
       totalRating: 5,
     });
-    if (response.success) {
+    if (response?.success) {
       const h = 24 - new Date().getHours();
       const m = 59 - new Date().getMinutes();
       const s = 59 - new Date().getSeconds();

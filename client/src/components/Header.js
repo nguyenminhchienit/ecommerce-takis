@@ -34,8 +34,9 @@ const Header = () => {
           <BsFillHandbagFill color="red" />
           <span>0 item</span>
         </div>
-        <div className="flex items-center justify-center px-4">
-          <HiMiniUserCircle size={24} />
+        <div className="flex items-center justify-center gap-2 px-4 border-r">
+          <HiMiniUserCircle size={24} color={"red"} />
+          <span>Profile</span>
         </div>
       </div>
     </div>

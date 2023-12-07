@@ -7,7 +7,7 @@ export const apiGetCategories = createAsyncThunk(
     // Gọi lên API backend
     const response = await apiGetCategory();
     // console.log(response);
-    if (!response.success) {
+    if (!response?.success) {
       return rejectWithValue(response);
     }
     return response.productCategories;

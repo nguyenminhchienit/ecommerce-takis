@@ -6,7 +6,7 @@ const ProductFeature = () => {
   const [productFeature, setProductFeature] = useState([]);
   const fetchProducts = async () => {
     const response = await apiGetProducts({ limit: 9, totalRating: 5 });
-    if (response.success) {
+    if (response?.success) {
       setProductFeature(response.products);
     }
   };

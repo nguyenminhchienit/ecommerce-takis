@@ -5,7 +5,6 @@ import icons from "../utils/icons";
 const HotCollection = () => {
   const { categories } = useSelector((state) => state.app);
   const { IoIosArrowForward } = icons;
-  console.log(categories);
   return (
     <div>
       <div className="mt-[15px]">
