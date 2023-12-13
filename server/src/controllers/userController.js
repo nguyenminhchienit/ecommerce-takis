@@ -6,6 +6,7 @@ const sendEmail = require("../utils/sendEmail");
 const cryptoJS = require("crypto");
 const Product = require("../models/product");
 const makeToken = require("uniqid");
+const bcrypt = require("bcrypt");
 
 const key = "nguyenminhchienit"; // tam thoi hard code do bi loi .env
 

@@ -3,7 +3,7 @@ import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { Link } from "react-router-dom";
 import icons from "../utils/icons";
 
-const { FaHandPointRight } = icons;
+const { FaAngleRight } = icons;
 
 const Breadcrumbs = ({ category, title }) => {
   const routes = [
@@ -27,7 +27,7 @@ const Breadcrumbs = ({ category, title }) => {
               <span>{breadcrumb}</span>
               {index !== origin.length - 1 && (
                 <span>
-                  <FaHandPointRight />
+                  <FaAngleRight />
                 </span>
               )}
             </div>
