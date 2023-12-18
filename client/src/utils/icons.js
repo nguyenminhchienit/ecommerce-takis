@@ -1,6 +1,6 @@
 import { MdLocalPhone } from "react-icons/md";
 import { IoMdMail, IoIosArrowForward } from "react-icons/io";
-import { BsFillHandbagFill } from "react-icons/bs";
+import { BsFillHandbagFill, BsCarFrontFill } from "react-icons/bs";
 import { HiMiniUserCircle } from "react-icons/hi2";
 import {
   FaHome,
@@ -8,11 +8,17 @@ import {
   FaHeart,
   FaHandPointRight,
   FaAngleRight,
+  FaShieldAlt,
+  FaGift,
+  FaSortDown,
 } from "react-icons/fa";
 import { TbCategoryFilled, TbLogout2 } from "react-icons/tb";
 import { MdOutlineStart, MdMenuBook } from "react-icons/md";
 import { CiStar } from "react-icons/ci";
 import { IoEyeSharp } from "react-icons/io5";
+import { GiReturnArrow } from "react-icons/gi";
+import { GrFormSubtract } from "react-icons/gr";
+import { GoPlus } from "react-icons/go";
 
 const icons = {
   MdLocalPhone,
@@ -31,6 +37,13 @@ const icons = {
   TbLogout2,
   FaHandPointRight,
   FaAngleRight,
+  FaShieldAlt,
+  BsCarFrontFill,
+  FaGift,
+  GiReturnArrow,
+  GoPlus,
+  GrFormSubtract,
+  FaSortDown,
 };
 
 export default icons;

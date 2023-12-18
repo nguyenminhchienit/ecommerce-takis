@@ -4,6 +4,7 @@ import { apiGetProducts } from "../../api/product";
 import FilterItem from "../../components/FilterItem";
 import Masonry from "react-masonry-css";
 import Product from "../../components/Product";
+import { useParams } from "react-router-dom";
 
 const breakpointColumnsObj = {
   default: 4,
@@ -12,11 +13,12 @@ const breakpointColumnsObj = {
   500: 1,
 };
 
-const Products = () => {
+const ProductCategory = () => {
   const [products, setProducts] = useState([]);
+  const { category } = useParams();
 
   const fetchProducts = async () => {
-    const response = await apiGetProducts();
+    const response = await apiGetProducts({ category });
     if (response?.success) {
       setProducts(response.products);
     }
@@ -68,4 +70,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default ProductCategory;

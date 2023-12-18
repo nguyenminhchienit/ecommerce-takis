@@ -13,7 +13,7 @@ const SliderProduct = ({ products }) => {
   return (
     <div className="w-full">
       {products && (
-        <Slider {...settings}>
+        <Slider className="custom-slider" {...settings}>
           {products?.map((item) => {
             return <Product key={item._id} data={item} />;
           })}

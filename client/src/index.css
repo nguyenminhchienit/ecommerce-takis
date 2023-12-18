@@ -2,18 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Roboto:wght@700&family=Ubuntu:wght@300;400;500;700&display=swap');
 
-button.slick-next{
+.custom-slider button.slick-next{
     right: 40px;
     z-index: 99999;
 }
 
-button.slick-next:hover:before,button.slick-prev:hover:before{
+.custom-slider button.slick-next:hover:before,button.slick-prev:hover:before{
     color: red;
 }
 
-button.slick-next::before, button.slick-prev::before{
+.custom-slider button.slick-next::before, button.slick-prev::before{
     color: gray;
     background-color: transparent;
     display: flex;
@@ -26,27 +28,97 @@ button.slick-next::before, button.slick-prev::before{
     z-index: 99999;
 }
 
-button.slick-prev{
+.custom-slider button.slick-prev{
     left: 0px;
     z-index: 99999;
 }
 
-button.slick-prev::before{
+.custom-slider button.slick-prev::before{
     content: '\276E';
 }
 
-button.slick-next::before{
+.custom-slider button.slick-next::before{
     content: '\276F';
 }
 
 
+
+
+
 /* React slick */
 
-.slick-slide > div {
+.custom-slider .slick-slide > div {
     margin-left:10px;
     margin-right:10px;
 }
-.slick-list {
+.custom-slider .slick-list {
     margin-left:-10px;
     margin-right:-10px;
 }
+
+.image-slider button.slick-next{
+    right: 30px;
+    top: 40px;
+    z-index: 99999;
+}
+
+.image-slider button.slick-next:hover:before,.image-slider button.slick-prev:hover:before{
+    color: red;
+}
+
+.image-slider button.slick-next::before,.image-slider button.slick-prev::before{
+    color: gray;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    content: '\276F';
+    z-index: 99999;
+}
+
+.image-slider button.slick-prev{
+    left: -10px;
+    top: 40px;
+    z-index: 99999;
+}
+
+.image-slider button.slick-prev::before{
+    content: '\276E';
+}
+
+.image-slider button.slick-next::before{
+    content: '\276F';
+}
+
+.image-slider .slick-slide > div {
+    margin-left:5px;
+    margin-right:5px;
+}
+
+.image-slider .slick-list {
+    margin-left:-5px;
+    margin-right:-10px;
+}
+
+
+
+input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .custom-number-input input:focus {
+    outline: none !important;
+  }
+
+  .custom-number-input button:focus {
+    outline: none !important;
+  }
+
+
+
+

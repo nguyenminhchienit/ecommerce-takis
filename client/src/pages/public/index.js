@@ -8,3 +8,4 @@ export { default as Products } from "./Products";
 export { default as DetailProduct } from "./DetailProduct";
 export { default as RedirectRegister } from "./RedirectRegister";
 export { default as ResetPassword } from "./ResetPassword";
+export { default as ProductCategory } from "./ProductCategory";

@@ -11,6 +11,7 @@ import {
   FAQ,
   RedirectRegister,
   ResetPassword,
+  ProductCategory,
 } from "./pages/public";
 import path from "./utils/path";
 import { apiGetCategories } from "./store/app/asyncActions";
@@ -30,6 +31,7 @@ function App() {
           <Route path={path.PRODUCT} element={<Products />} />
           <Route path={path.FAQs} element={<FAQ />} />
           <Route path={path.OUR_SERVICE} element={<Services />} />
+          <Route path={path.PRODUCT__CATEGORY} element={<ProductCategory />} />
           <Route
             path={path.DETAIL_PRODUCT__CATEGORY__PID__TITLE}
             element={<DetailProduct />}

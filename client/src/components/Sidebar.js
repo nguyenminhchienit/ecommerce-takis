@@ -20,7 +20,7 @@ const Sidebar = () => {
               <div className="flex gap-6 items-center" key={item._id}>
                 <IoIosArrowForward />
                 <NavLink
-                  to={item.slug}
+                  to={`/products/${item.slug}`}
                   className={({ isActive }) =>
                     isActive
                       ? "hover:text-main text-main uppercase"
