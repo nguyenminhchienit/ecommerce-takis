@@ -21,7 +21,13 @@ const handleGetProductById = asyncHandler(async (req, res) => {
   if (!pid) {
     throw new Error("Missing product id");
   }
-  const product = await Product.findById({ _id: pid });
+  const product = await Product.findById({ _id: pid }).populate({
+    path: "rating",
+    populate: {
+      path: "postedBy",
+      select: "firstName lastName avatar",
+    },
+  });
   return res.status(200).json({
     success: product ? true : false,
     product: product ? product : "Get a product failed",
@@ -51,7 +57,18 @@ const handleGetAllProduct = asyncHandler(async (req, res) => {
     formatQuery.category = { $regex: queries.category, $options: "i" };
   }
 
-  let queryCommand = Product.find(formatQuery);
+  let colorQueryObject = {};
+  if (queries?.color) {
+    delete formatQuery.color;
+    const colorArr = queries.color?.split(",");
+    const colorQuery = colorArr.map((item) => ({
+      color: { $regex: item, $options: "i" },
+    }));
+    colorQueryObject = { $or: colorQuery };
+  }
+  const q = { ...colorQueryObject, ...formatQuery };
+
+  let queryCommand = Product.find(q);
 
   //Sorting
   if (req.query.sort) {
@@ -74,7 +91,7 @@ const handleGetAllProduct = asyncHandler(async (req, res) => {
 
   queryCommand
     .then(async (products) => {
-      const counts = await Product.find(formatQuery).countDocuments();
+      const counts = await Product.find(q).countDocuments();
       return res.status(200).json({
         success: products ? true : false,
         products: products ? products : "Get all product failed",
@@ -117,7 +134,7 @@ const handleDeleteProductById = asyncHandler(async (req, res) => {
 
 const handleRatings = asyncHandler(async (req, res) => {
   const { _id } = req.user;
-  const { star, comment, pid } = req.body;
+  const { star, comment, pid, updatedAt } = req.body;
   if (!star || !pid) {
     throw new Error("Missing input");
   }
@@ -136,6 +153,7 @@ const handleRatings = asyncHandler(async (req, res) => {
         $set: {
           "rating.$.star": star,
           "rating.$.comment": comment,
+          "rating.$.updatedAt": updatedAt,
         },
       },
       { new: true }
@@ -150,6 +168,7 @@ const handleRatings = asyncHandler(async (req, res) => {
             star: star,
             comment: comment,
             postedBy: _id,
+            updatedAt,
           },
         },
       },

@@ -8,6 +8,7 @@ export const renderStarProduct = (number, size) => {
     //return;
   }
   const star = [];
+  number = Math.round(number);
   for (let i = 0; i < +number; i++) {
     star.push(<FaStar color="orange" size={size || 16} />);
   }

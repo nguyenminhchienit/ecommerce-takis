@@ -15,6 +15,7 @@ const breakpointColumnsObj = {
 
 const ProductCategory = () => {
   const [products, setProducts] = useState([]);
+  const [activeClick, setActiveClick] = useState(null);
   const { category } = useParams();
 
   const fetchProducts = async () => {
@@ -27,6 +28,14 @@ const ProductCategory = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const handleChangeClick = (name) => {
+    if (name === activeClick) {
+      setActiveClick(null);
+    } else {
+      setActiveClick(name);
+    }
+  };
 
   return (
     <div>
@@ -41,8 +50,16 @@ const ProductCategory = () => {
             Filter by
           </span>
           <div className="flex gap-2">
-            <FilterItem name={"price"} />
-            <FilterItem name={"color"} />
+            <FilterItem
+              name={"price"}
+              handleChangeClick={handleChangeClick}
+              activeClick={activeClick}
+            />
+            <FilterItem
+              name={"color"}
+              handleChangeClick={handleChangeClick}
+              activeClick={activeClick}
+            />
           </div>
         </div>
 
@@ -51,7 +68,12 @@ const ProductCategory = () => {
             sort by
           </span>
           <div className="flex gap-2">
-            <FilterItem name={"best selling"} xl />
+            <FilterItem
+              name={"best selling"}
+              xl
+              handleChangeClick={handleChangeClick}
+              activeClick={activeClick}
+            />
           </div>
         </div>
       </div>

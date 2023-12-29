@@ -14,10 +14,16 @@ const TopHeader = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(apiGetUserCurrent());
-    }
-  }, [isLoggedIn]);
+    const setTimerId = setTimeout(() => {
+      if (isLoggedIn) {
+        dispatch(apiGetUserCurrent());
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(setTimerId);
+    };
+  }, [isLoggedIn, dispatch]);
   return (
     <div className="w-full bg-main flex justify-center">
       <div className="w-main h-[38px]  text-white flex items-center justify-between">

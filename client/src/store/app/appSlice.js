@@ -7,8 +7,15 @@ const appSlice = createSlice({
     isLoading: false,
     categories: [],
     errorMessage: "",
+    isShowModal: false,
+    childrenModal: null,
   },
-  reducers: {},
+  reducers: {
+    showModal: (state, action) => {
+      state.isShowModal = action.payload.isShowModal;
+      state.childrenModal = action.payload.childrenModal;
+    },
+  },
   // Code logic xử lý async action
   extraReducers: (builder) => {
     // Bắt đầu thực hiện action login (Promise pending)
@@ -34,5 +41,5 @@ const appSlice = createSlice({
   },
 });
 
-// export const {} = appSlice.actions;
+export const { showModal } = appSlice.actions;
 export default appSlice.reducer;

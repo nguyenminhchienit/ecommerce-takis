@@ -56,6 +56,9 @@ var productSchema = new mongoose.Schema(
           ref: "User",
         },
         comment: { type: String },
+        updatedAt: {
+          type: Date,
+        },
       },
     ],
     totalRating: {

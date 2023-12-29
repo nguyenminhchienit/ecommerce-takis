@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Breadcrumbs } from "../../components";
 import { apiGetProducts } from "../../api/product";
 import FilterItem from "../../components/FilterItem";
 import Masonry from "react-masonry-css";
 import Product from "../../components/Product";
+import {
+  useSearchParams,
+  useNavigate,
+  useParams,
+  createSearchParams,
+} from "react-router-dom";
+import InputSelect from "../../components/InputSelect";
+import { sorts } from "../../utils/constants";
 
 const breakpointColumnsObj = {
   default: 4,
@@ -13,18 +21,72 @@ const breakpointColumnsObj = {
 };
 
 const Products = () => {
+  const navigate = useNavigate();
+  const { category } = useParams();
   const [products, setProducts] = useState([]);
+  const [sort, setSort] = useState("");
+  const [activeClick, setActiveClick] = useState(null);
+  const [params] = useSearchParams();
 
-  const fetchProducts = async () => {
-    const response = await apiGetProducts();
+  const fetchProducts = async (queries) => {
+    const response = await apiGetProducts(queries);
     if (response?.success) {
       setProducts(response.products);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    let param = [];
+    for (let i of params.entries()) {
+      param.push(i);
+    }
+
+    const queries = {};
+    for (let i of params) {
+      queries[i[0]] = i[1];
+    }
+
+    let priceQuery = {};
+    if (queries.to && queries.from) {
+      priceQuery = {
+        $and: [
+          { price: { gte: queries.from } },
+          { price: { lte: queries.to } },
+        ],
+      };
+      delete queries.price;
+      delete queries.from;
+      delete queries.to;
+    }
+    const q = { ...priceQuery, ...queries };
+    fetchProducts(q);
+  }, [params]);
+
+  const handleChangeClick = (name) => {
+    if (name === activeClick) {
+      setActiveClick(null);
+    } else {
+      setActiveClick(name);
+    }
+  };
+
+  const handleChangeSelect = useCallback(
+    (value) => {
+      setSort(value);
+    },
+    [sort]
+  );
+
+  useEffect(() => {
+    navigate({
+      pathname: category !== undefined ? `/products/${category}` : `/products`,
+      search:
+        sort !== "" &&
+        createSearchParams({
+          sort: sort,
+        }).toString(),
+    });
+  }, [sort]);
 
   return (
     <div>
@@ -39,8 +101,17 @@ const Products = () => {
             Filter by
           </span>
           <div className="flex gap-2">
-            <FilterItem name={"price"} />
-            <FilterItem name={"color"} />
+            <FilterItem
+              name={"price"}
+              handleChangeClick={handleChangeClick}
+              activeClick={activeClick}
+              type={"input"}
+            />
+            <FilterItem
+              name={"color"}
+              handleChangeClick={handleChangeClick}
+              activeClick={activeClick}
+            />
           </div>
         </div>
 
@@ -49,7 +120,11 @@ const Products = () => {
             sort by
           </span>
           <div className="flex gap-2">
-            <FilterItem name={"best selling"} xl />
+            <InputSelect
+              value={sort}
+              options={sorts}
+              changeValue={handleChangeSelect}
+            />
           </div>
         </div>
       </div>

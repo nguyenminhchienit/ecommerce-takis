@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs, SliderProduct } from "../../components";
 import { apiGetProduct, apiGetProducts } from "../../api/product";
@@ -25,6 +25,8 @@ const DetailProduct = () => {
   const [product, setProduct] = useState({});
   const [products, setProducts] = useState([]);
   const [image, setImage] = useState("");
+  const [update, setUpdate] = useState(false);
+
   const fetchProduct = async () => {
     const response = await apiGetProduct(pid);
     if (response?.success) {
@@ -50,9 +52,20 @@ const DetailProduct = () => {
       fetchProduct();
       fetchProducts();
     }
+    window.scrollTo(0, 0);
   }, [pid]);
+
+  useEffect(() => {
+    if (pid) {
+      fetchProduct();
+    }
+  }, [update]);
+
+  const rerender = useCallback(() => {
+    setUpdate(!update);
+  }, [update]);
   return (
-    <>
+    <div className="">
       <div className="w-full bg-gray-100 h-[70px] flex justify-center flex-col mt-3">
         <div className="ml-2">
           <div>{title}</div>
@@ -121,7 +134,7 @@ const DetailProduct = () => {
       </div>
 
       <div>
-        <DescriptionProduct product={product} />
+        <DescriptionProduct product={product} rerender={rerender} />
       </div>
 
       <div className="mt-8">
@@ -130,7 +143,7 @@ const DetailProduct = () => {
         </div>
         <SliderProduct products={products} />
       </div>
-    </>
+    </div>
   );
 };
 
