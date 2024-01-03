@@ -86,3 +86,8 @@ export const validate = (payload, setInValidField) => {
   }
   return invalids;
 };
+
+export const generateRange = (star, end) => {
+  const length = end - star + 1;
+  return Array.from({ length }, (_, index) => star + index);
+};

@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import InputSelect from "../../components/InputSelect";
 import { sorts } from "../../utils/constants";
+import Pagination from "../../components/Pagination/Pagination";
 
 const breakpointColumnsObj = {
   default: 4,
@@ -138,6 +139,9 @@ const Products = () => {
             return <Product key={item._id} data={item} />;
           })}
         </Masonry>
+      </div>
+      <div>
+        <Pagination />
       </div>
     </div>
   );
