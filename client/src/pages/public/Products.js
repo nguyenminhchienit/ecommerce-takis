@@ -32,7 +32,7 @@ const Products = () => {
   const fetchProducts = async (queries) => {
     const response = await apiGetProducts(queries);
     if (response?.success) {
-      setProducts(response.products);
+      setProducts(response);
     }
   };
 
@@ -61,6 +61,7 @@ const Products = () => {
     }
     const q = { ...priceQuery, ...queries };
     fetchProducts(q);
+    window.scrollTo(0, 0);
   }, [params]);
 
   const handleChangeClick = (name) => {
@@ -135,13 +136,13 @@ const Products = () => {
           className="my-masonry-grid flex gap-4"
           columnClassName="my-masonry-grid_column flex flex-col gap-4"
         >
-          {products?.map((item) => {
+          {products?.products?.map((item) => {
             return <Product key={item._id} data={item} />;
           })}
         </Masonry>
       </div>
       <div>
-        <Pagination />
+        <Pagination totalCount={products?.counts} />
       </div>
     </div>
   );
