@@ -2,7 +2,12 @@ import React, { memo, useEffect } from "react";
 import icons from "../utils/icons";
 import { useState } from "react";
 import { color } from "../utils/constants";
-import { createSearchParams, useParams, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import Button from "./Button";
 
 const { FaSortDown } = icons;
@@ -22,6 +27,7 @@ const FilterItem = ({
 
   const { category } = useParams();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
 
   const handleSelect = (e) => {
     const already = selected.find((item) => item === e.target.defaultValue);
@@ -35,27 +41,53 @@ const FilterItem = ({
   };
 
   useEffect(() => {
+    let param = [];
+    for (let i of params.entries()) {
+      param.push(i);
+    }
+    const queries = {};
+    for (let i of param) {
+      queries[i[0]] = i[1];
+    }
+    if (selected.length > 0) {
+      queries.color = selected.join(",");
+      queries.page = 1;
+    } else {
+      delete queries.color;
+    }
+
     navigate({
       pathname: category !== undefined ? `/products/${category}` : `/products`,
-      search:
-        selected.length > 0 &&
-        createSearchParams({
-          color: selected.join(","),
-        }).toString(),
+      search: createSearchParams(queries).toString(),
     });
   }, [selected]);
 
   const handleClickFilterPrice = () => {
-    const dataPrice = {
-      from: price.from,
-      to: price.to,
-    };
+    let param = [];
+    for (let i of params.entries()) {
+      param.push(i);
+    }
+    const queries = {};
+    for (let i of param) {
+      queries[i[0]] = i[1];
+    }
+    queries.page = 1;
+    if (Number(price.from) > 0) {
+      queries.from = price.from;
+    } else {
+      delete queries.from;
+    }
+    if (Number(price.to) > 0) {
+      queries.to = price.to;
+    } else {
+      delete queries.to;
+    }
     navigate({
       pathname: category !== undefined ? `/products/${category}` : `/products`,
       search:
         price.from !== "" &&
         price.to !== "" &&
-        createSearchParams(dataPrice).toString(),
+        createSearchParams(queries).toString(),
     });
   };
 
