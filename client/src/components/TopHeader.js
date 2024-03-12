@@ -1,17 +1,19 @@
 import React, { memo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import path from "../utils/path";
 import { apiGetUserCurrent } from "../store/user/asyncActions";
 import { useDispatch, useSelector } from "react-redux";
 import icons from "../utils/icons";
 import Tooltip from "./ToolTip";
-import { logout } from "../store/user/userSlice";
+import { logout, clearMessage } from "../store/user/userSlice";
+import Swal from "sweetalert2";
 
 const { TbLogout2 } = icons;
 
 const TopHeader = () => {
-  const { isLoggedIn, current } = useSelector((state) => state.user);
+  const { isLoggedIn, current, message } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const setTimerId = setTimeout(() => {
@@ -24,12 +26,21 @@ const TopHeader = () => {
       clearTimeout(setTimerId);
     };
   }, [isLoggedIn, dispatch]);
+
+  useEffect(() => {
+    if (message) {
+      Swal.fire("Oops", message, "info").then(() => {
+        dispatch(clearMessage());
+        navigate(`/${path.LOGIN}`);
+      });
+    }
+  }, [message]);
   return (
     <div className="w-full bg-main flex justify-center">
       <div className="w-main h-[38px]  text-white flex items-center justify-between">
         <div className="text-sm">ORDER ONLINE OR CALL US (+1800) 888 8888</div>
 
-        {isLoggedIn ? (
+        {isLoggedIn && current ? (
           <div className="flex gap-2 items-center">
             <span className="text-sm">{`Welcome, ${current?.lastName} ${current?.firstName}`}</span>
 

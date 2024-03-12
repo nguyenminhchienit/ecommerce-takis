@@ -90,7 +90,7 @@ const Login = () => {
         } else {
           Swal.fire({
             title: "Oops",
-            text: response?.mes,
+            text: response?.mes || "Mật khẩu hoặc tài khoản chưa chính xác",
             icon: "error",
           });
         }

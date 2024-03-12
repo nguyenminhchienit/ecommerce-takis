@@ -5,7 +5,7 @@ const key = "nguyenminhchienit";
 const createJWT = (payload) => {
   try {
     const token = jwt.sign(payload, key, {
-      expiresIn: "1d",
+      expiresIn: "2d",
     });
     return token;
   } catch (error) {
