@@ -12,6 +12,18 @@ const path = {
   DETAIL_PRODUCT__CATEGORY__PID__TITLE: "products/:category/:pid/:title",
   REDIRECT_REGISTER: "final-create-account/:status",
   RESET_PASSWORD: "reset-password/:token",
+
+  // ADMIN
+  ADMIN: "admin",
+  DASHBOARD: "dashboard",
+  MANAGE_USER: "manage-user",
+  MANAGE_ORDER: "manage-order",
+  MANAGE_PRODUCT: "manage-product",
+  CREATE_PRODUCT: "create-product",
+
+  //MEMBER
+  MEMBER: "member",
+  PERSONAL: "personal",
 };
 
 export default path;

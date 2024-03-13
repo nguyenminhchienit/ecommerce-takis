@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { InputField, Button } from "../../components";
+import { InputField, Button, Loading } from "../../components";
 import { apiLogin, apiRegister, apiForgotPassword } from "../../api/user";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import path from "../../utils/path";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../store/user/userSlice";
 import { validate } from "../../utils/helpers";
+import { showModal } from "../../store/app/appSlice";
 
 const Login = () => {
   const [payload, setPayload] = useState({
@@ -54,12 +55,16 @@ const Login = () => {
 
   const handleSubmit = useCallback(async () => {
     const { firstName, lastName, mobile, ...data } = payload;
+    console.log("Check register: ", payload);
     const invalids = isRegister
       ? validate(payload, setInValidField)
       : validate(data, setInValidField);
     if (invalids === 0) {
       if (isRegister) {
+        dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }));
         const response = await apiRegister(payload);
+        dispatch(showModal({ isShowModal: false, modalChildren: null }));
+        console.log("Check res regi: ", response);
         if (response?.success) {
           Swal.fire({
             title: "You had register successfully",

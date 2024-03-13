@@ -150,7 +150,7 @@ const handleGetUserCurrent = asyncHandler(async (req, res) => {
     });
   }
   const user = await User.findById({ _id: _id }).select(
-    "-refreshToken -password -role"
+    "-refreshToken -password"
   );
   if (user) {
     return res.status(200).json({

@@ -35,7 +35,7 @@ const userSlice = createSlice({
     // Khi thực hiện action login thành công (Promise fulfilled)
     builder.addCase(actions.apiGetUserCurrent.fulfilled, (state, action) => {
       // Tắt trạng thái loading, lưu thông tin user vào store
-      // console.log(action);
+      console.log("check userslice: ", action);
       state.isLoading = false;
       state.current = action.payload;
       state.isLoggedIn = true;

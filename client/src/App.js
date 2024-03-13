@@ -13,6 +13,15 @@ import {
   ResetPassword,
   ProductCategory,
 } from "./pages/public";
+
+import AdminLayout from "./pages/admin/AdminLayout";
+import DashBoard from "./pages/admin/Dashboard";
+import ManageOrder from "./pages/admin/ManageOrder";
+import ManageProduct from "./pages/admin/ManageProduct";
+import ManageUser from "./pages/admin/ManageUser";
+import CreateProduct from "./pages/admin/CreateProduct";
+import MemberLayout from "./pages/private/MemberLayout";
+import Personal from "./pages/private/Personal";
 import path from "./utils/path";
 import { apiGetCategories } from "./store/app/asyncActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,6 +50,19 @@ function App() {
             element={<DetailProduct />}
           />
         </Route>
+        {/* Admin */}
+        <Route path={path.ADMIN} element={<AdminLayout />}>
+          <Route path={path.DASHBOARD} element={<DashBoard />} />
+          <Route path={path.MANAGE_ORDER} element={<ManageOrder />} />
+          <Route path={path.MANAGE_PRODUCT} element={<ManageProduct />} />
+          <Route path={path.MANAGE_ORDER} element={<ManageUser />} />
+          <Route path={path.CREATE_PRODUCT} element={<CreateProduct />} />
+        </Route>
+        {/* Member */}
+        <Route path={path.MEMBER} element={<MemberLayout />}>
+          <Route path={path.PERSONAL} element={<Personal />} />
+        </Route>
+        {/* Login */}
         <Route path={path.LOGIN} element={<Login />} />
         <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
         <Route path={path.REDIRECT_REGISTER} element={<RedirectRegister />} />

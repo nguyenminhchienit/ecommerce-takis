@@ -3,9 +3,11 @@ import logo from "../assets/images/logo.png";
 import icons from "../utils/icons";
 import { Link } from "react-router-dom";
 import path from "../utils/path";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const { MdLocalPhone, IoMdMail, HiMiniUserCircle, BsFillHandbagFill } = icons;
+  const { isLoggedIn, current } = useSelector((state) => state.user);
   return (
     <div className="flex justify-between w-main h-[80px] py-[25px]">
       <div>
@@ -30,14 +32,25 @@ const Header = () => {
           <span>Online Support 24/7</span>
         </div>
 
-        <div className="flex items-center justify-center gap-2 px-4 border-r">
-          <BsFillHandbagFill color="red" />
-          <span>0 item</span>
-        </div>
-        <div className="flex items-center justify-center gap-2 px-4 border-r">
-          <HiMiniUserCircle size={24} color={"red"} />
-          <span>Profile</span>
-        </div>
+        {isLoggedIn && current && (
+          <>
+            <div className="flex items-center justify-center gap-2 px-4 border-r">
+              <BsFillHandbagFill color="red" />
+              <span>0 item</span>
+            </div>
+            <Link
+              className="flex items-center justify-center gap-2 px-4 border-r"
+              to={
+                current?.role === "admin"
+                  ? `/${path.ADMIN}/${path.DASHBOARD}`
+                  : `/${path.MEMBER}/${path.PERSONAL}`
+              }
+            >
+              <HiMiniUserCircle size={24} color={"red"} />
+              <span>Profile</span>
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );
