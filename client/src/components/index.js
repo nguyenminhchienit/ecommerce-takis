@@ -12,3 +12,4 @@ export { default as InputField } from "./InputField";
 export { default as Button } from "./Button";
 export { default as Breadcrumbs } from "./Breadcrumbs";
 export { default as Loading } from "./Loading";
+export { default as SideBarAdmin } from "./SiderBar/SideBarAdmin";

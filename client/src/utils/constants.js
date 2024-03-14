@@ -1,4 +1,5 @@
 import path from "./path";
+import icons from "../utils/icons";
 
 export const navigation = [
   {
@@ -71,5 +72,51 @@ export const voteOption = [
   {
     id: 5,
     text: "Perfect",
+  },
+];
+
+const {
+  RxDashboard,
+  MdManageAccounts,
+  MdOutlineProductionQuantityLimits,
+  FaMoneyBills,
+} = icons;
+export const adminSidebar = [
+  {
+    id: 1,
+    type: "SINGLE",
+    text: "Dashboard",
+    path: `/${path.ADMIN}/${path.DASHBOARD}`,
+    icon: <RxDashboard size={24} />,
+  },
+  {
+    id: 2,
+    type: "SINGLE",
+    text: "Manage User",
+    path: `/${path.ADMIN}/${path.MANAGE_USER}`,
+    icon: <MdManageAccounts size={24} />,
+  },
+  {
+    id: 3,
+    type: "PARENT",
+    text: "Manage Product",
+    icon: <MdOutlineProductionQuantityLimits size={24} />,
+    submenu: [
+      {
+        text: "Create Product",
+        path: `/${path.ADMIN}/${path.CREATE_PRODUCT}`,
+      },
+      {
+        text: "Manage Product",
+        path: `/${path.ADMIN}/${path.MANAGE_PRODUCT}`,
+      },
+    ],
+  },
+  {
+    id: 4,
+    type: "SINGLE",
+    text: "Manage Order",
+    path: `/${path.ADMIN}/${path.MANAGE_ORDER}`,
+    icon: <FaMoneyBills size={24} />,
   },
 ];

@@ -13,12 +13,19 @@ import {
   FaSortDown,
 } from "react-icons/fa";
 import { TbCategoryFilled, TbLogout2 } from "react-icons/tb";
-import { MdOutlineStart, MdMenuBook } from "react-icons/md";
+import {
+  MdOutlineStart,
+  MdMenuBook,
+  MdManageAccounts,
+  MdOutlineProductionQuantityLimits,
+} from "react-icons/md";
 import { CiStar } from "react-icons/ci";
 import { IoEyeSharp } from "react-icons/io5";
 import { GiReturnArrow } from "react-icons/gi";
 import { GrFormSubtract } from "react-icons/gr";
 import { GoPlus } from "react-icons/go";
+import { RxDashboard } from "react-icons/rx";
+import { FaMoneyBills } from "react-icons/fa6";
 
 const icons = {
   MdLocalPhone,
@@ -44,6 +51,10 @@ const icons = {
   GoPlus,
   GrFormSubtract,
   FaSortDown,
+  RxDashboard,
+  MdManageAccounts,
+  MdOutlineProductionQuantityLimits,
+  FaMoneyBills,
 };
 
 export default icons;

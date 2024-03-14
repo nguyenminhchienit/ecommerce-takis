@@ -55,7 +55,7 @@ function App() {
           <Route path={path.DASHBOARD} element={<DashBoard />} />
           <Route path={path.MANAGE_ORDER} element={<ManageOrder />} />
           <Route path={path.MANAGE_PRODUCT} element={<ManageProduct />} />
-          <Route path={path.MANAGE_ORDER} element={<ManageUser />} />
+          <Route path={path.MANAGE_USER} element={<ManageUser />} />
           <Route path={path.CREATE_PRODUCT} element={<CreateProduct />} />
         </Route>
         {/* Member */}
