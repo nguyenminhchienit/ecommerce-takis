@@ -279,11 +279,57 @@ const handleResetPassword = asyncHandler(async (req, res) => {
 });
 
 const handleGetAllUser = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password -role -refreshToken");
-  return res.status(200).json({
-    success: users ? true : false,
-    users: users,
-  });
+  const queries = { ...req.query };
+  //Tach cac truong dat biet ra khoi query
+  const excludeFields = ["limit", "page", "fields", "sort"];
+  excludeFields.forEach((el) => delete queries[el]);
+
+  //Fortmat lai cho dung cu phap cua mongoose
+  let queryString = JSON.stringify(queries);
+  queryString = queryString.replace(
+    /\b(gte|gt|lte|lt)\b/g,
+    (match) => `$${match}`
+  );
+  const formatQuery = JSON.parse(queryString);
+
+  //Filtering
+  if (queries?.name) {
+    formatQuery.name = { $regex: queries.name, $options: "i" };
+  }
+
+  let queryCommand = User.find(formatQuery);
+
+  //Sorting
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(",").join(" ");
+    queryCommand = queryCommand.sort(sortBy);
+  }
+
+  //Limit fields
+  if (req.query.fields) {
+    const fields = req.query.fields.split(",").join(" ");
+    queryCommand = queryCommand.select(fields);
+  }
+
+  //Pagination
+  const page = +req.query.page * 1 || 1; // so count truyen vao
+  const limit = +req.query.limit * 1 || 10; //(tham so limit);
+  const skip = (page - 1) * limit;
+
+  queryCommand = queryCommand.skip(skip).limit(limit);
+
+  queryCommand
+    .then(async (users) => {
+      const counts = await User.find(formatQuery).countDocuments();
+      return res.status(200).json({
+        success: users ? true : false,
+        users: users ? users : "Get all users failed",
+        counts,
+      });
+    })
+    .catch((err) => {
+      throw new Error(err.message);
+    });
 });
 
 const handleDeleteUser = asyncHandler(async (req, res) => {

@@ -39,3 +39,11 @@ export const apiGetCurrent = (data) => {
     method: "get",
   });
 };
+
+export const apiGetUsers = (params) => {
+  return axios({
+    url: "/user/",
+    method: "get",
+    params: params,
+  });
+};
