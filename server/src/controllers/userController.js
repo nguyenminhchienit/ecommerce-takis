@@ -297,6 +297,15 @@ const handleGetAllUser = asyncHandler(async (req, res) => {
     formatQuery.name = { $regex: queries.name, $options: "i" };
   }
 
+  if (req.query.q) {
+    delete formatQuery.q;
+    formatQuery["$or"] = [
+      { firstName: { $regex: req.query.q, $options: "i" } },
+      { lastName: { $regex: req.query.q, $options: "i" } },
+      { email: { $regex: req.query.q, $options: "i" } },
+    ];
+  }
+
   let queryCommand = User.find(formatQuery);
 
   //Sorting

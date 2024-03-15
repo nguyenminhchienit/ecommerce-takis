@@ -4,7 +4,8 @@ import { BsThreeDots } from "react-icons/bs";
 
 const usePagination = (totalCountProduct, currentPage, siblingCount = 1) => {
   const paginationArray = useMemo(() => {
-    const pageSize = process.env.REACT_APP_PRODUCT_LIMIT || 10;
+    // const pageSize = process.env.REACT_APP_PRODUCT_LIMIT || 10;
+    const pageSize = 2;
     const paginationCount = Math.ceil(totalCountProduct / pageSize);
     const totalPaginationItem = siblingCount + 5;
 

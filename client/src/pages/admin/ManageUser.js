@@ -1,19 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { apiGetUsers } from "../../api/user";
 import moment from "moment";
+import InputField from "../../components/InputField";
+import Pagination from "../../components/Pagination/Pagination";
+import useDebounce from "../../hooks/useDebounce";
+import { useSearchParams } from "react-router-dom";
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
+  const [queries, setQueries] = useState({
+    q: "",
+  });
+  const [params] = useSearchParams();
+
+  const debounce = useDebounce(queries.q, 800);
+
   const fetchAllUsers = async (params) => {
-    const response = await apiGetUsers();
+    const response = await apiGetUsers({ ...params, limit: 2 });
     if (response?.success) {
-      setUsers(response?.users);
+      setUsers(response);
     }
   };
 
   useEffect(() => {
-    fetchAllUsers();
-  }, []);
+    const queries = Object.fromEntries([...params]);
+    if (debounce) {
+      queries.q = debounce;
+    }
+    fetchAllUsers(queries);
+  }, [debounce, params]);
+
+  const setValue = (value) => {
+    setQueries(value);
+  };
 
   return (
     <div>
@@ -21,6 +40,15 @@ const ManageUser = () => {
         <span>Manage User</span>
       </h1>
       <div>
+        <div className="flex text-right mr-3">
+          <InputField
+            nameKey={"q"}
+            value={queries.q}
+            setValue={setValue}
+            placeholder="Search email or name ..."
+            styleCustom="w500"
+          />
+        </div>
         <div class="overflow-x-auto shadow-md ">
           <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -46,7 +74,7 @@ const ManageUser = () => {
               </tr>
             </thead>
             <tbody>
-              {users?.map((user, index) => {
+              {users?.users?.map((user, index) => {
                 return (
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4">{index + 1}</td>
@@ -79,6 +107,10 @@ const ManageUser = () => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div className="flex justify-end mr-3">
+        <Pagination totalCount={users?.counts} />
       </div>
     </div>
   );

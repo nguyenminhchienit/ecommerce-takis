@@ -1,4 +1,5 @@
 import React, { memo, useState } from "react";
+import clsx from "clsx";
 
 const InputField = ({
   value,
@@ -7,10 +8,12 @@ const InputField = ({
   type,
   inValidField,
   setInValidField,
+  placeholder,
+  styleCustom,
 }) => {
   const [isHover, setIsHover] = useState(false);
   const customNameKey = nameKey?.slice(0, 1).toUpperCase() + nameKey?.slice(1);
-  console.log(inValidField);
+  console.log(value);
   return (
     <div className="w-full mb-4 relative">
       {isHover && (
@@ -23,15 +26,18 @@ const InputField = ({
       )}
       <input
         type={type || "text"}
-        className="px-4 py-2 rounded-md w-full border outline-none focus-within:border-main"
-        placeholder={customNameKey}
+        className={clsx(
+          "px-4 py-2 rounded-md w-full border outline-none focus-within:border-main",
+          styleCustom
+        )}
+        placeholder={placeholder || customNameKey}
         value={value}
         onChange={(e) =>
           setValue((prev) => ({ ...prev, [nameKey]: e.target.value }))
         }
         onFocus={() => {
-          setIsHover(true);
-          setInValidField([]);
+          !placeholder && setIsHover(true);
+          setInValidField && setInValidField([]);
         }}
         onBlur={() => setIsHover(false)}
       />

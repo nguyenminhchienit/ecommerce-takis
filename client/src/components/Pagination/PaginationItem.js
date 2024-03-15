@@ -4,12 +4,15 @@ import {
   createSearchParams,
   useParams,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 
 const PaginationItem = ({ children }) => {
   const [params] = useSearchParams();
   const { category } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const handlePagination = () => {
     let param = [];
     for (let i of params.entries()) {
@@ -23,7 +26,8 @@ const PaginationItem = ({ children }) => {
       queries.page = children;
     }
     navigate({
-      pathname: category !== undefined ? `/products/${category}` : `/products`,
+      pathname:
+        category !== undefined ? `/products/${category}` : location.pathname,
       search: createSearchParams(queries).toString(),
     });
     console.log(queries);
