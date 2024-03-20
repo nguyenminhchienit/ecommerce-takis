@@ -26,6 +26,8 @@ import path from "./utils/path";
 import { apiGetCategories } from "./store/app/asyncActions";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "./components/Modal/Modal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const dispatch = useDispatch();
@@ -67,6 +69,7 @@ function App() {
         <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
         <Route path={path.REDIRECT_REGISTER} element={<RedirectRegister />} />
       </Routes>
+      <ToastContainer />
     </div>
   );
 }

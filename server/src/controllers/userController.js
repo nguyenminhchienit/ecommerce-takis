@@ -342,11 +342,11 @@ const handleGetAllUser = asyncHandler(async (req, res) => {
 });
 
 const handleDeleteUser = asyncHandler(async (req, res) => {
-  const { _id } = req.query;
-  if (!_id) {
+  const { uid } = req.params;
+  if (!undefinedid) {
     throw new Error("Missing params");
   }
-  const user = await User.findByIdAndDelete({ _id: _id });
+  const user = await User.findByIdAndDelete({ _id: uid });
   return res.status(200).json({
     success: user ? true : false,
     mes: user ? `User with email ${user.email} deleted` : "User not found",
@@ -372,13 +372,13 @@ const handleUpdateUser = asyncHandler(async (req, res) => {
 });
 
 const handleUpdateUserByAdmin = asyncHandler(async (req, res) => {
-  const { _id } = req.params;
-  if (!_id || Object.keys(req.body).length === 0) {
+  const { uid } = req.params;
+  if (!uid || Object.keys(req.body).length === 0) {
     throw new Error("Missing input");
   }
   const user = await User.findByIdAndUpdate(
     {
-      _id: _id,
+      _id: uid,
     },
     req.body,
     { new: true }
@@ -386,6 +386,7 @@ const handleUpdateUserByAdmin = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: user ? true : false,
     data: user ? user : "Something wrong",
+    mes: user ? "Updated" : "Update fail",
   });
 });
 

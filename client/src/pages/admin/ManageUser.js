@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { apiGetUsers } from "../../api/user";
+import { apiDeleteUser, apiGetUsers } from "../../api/user";
 import moment from "moment";
 import InputField from "../../components/InputField";
 import Pagination from "../../components/Pagination/Pagination";
 import useDebounce from "../../hooks/useDebounce";
 import { useSearchParams } from "react-router-dom";
+import { showModal } from "../../store/app/appSlice";
+import { useDispatch } from "react-redux";
+import ModalEdit from "../../components/Modal/ModalEdit";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
+  const [update, setUpdate] = useState(false);
   const [queries, setQueries] = useState({
     q: "",
   });
   const [params] = useSearchParams();
+  const dispatch = useDispatch();
 
   const debounce = useDebounce(queries.q, 800);
 
@@ -28,10 +35,42 @@ const ManageUser = () => {
       queries.q = debounce;
     }
     fetchAllUsers(queries);
-  }, [debounce, params]);
+  }, [debounce, params, update]);
 
   const setValue = (value) => {
     setQueries(value);
+  };
+
+  const handleSetUpdate = () => {
+    setUpdate(!update);
+  };
+
+  const handleEditUser = (user) => {
+    dispatch(
+      showModal({
+        isShowModal: true,
+        childrenModal: (
+          <ModalEdit user={user} handleSetUpdate={handleSetUpdate} />
+        ),
+      })
+    );
+  };
+
+  const handleDeleteUser = (user) => {
+    Swal.fire({
+      title: "You are sure.....",
+      text: `You want delete ${user?.email}`,
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await apiDeleteUser(user?._id);
+        if (response.success) {
+          toast.success(response.mes);
+        } else {
+          toast.error(response.mes);
+        }
+      }
+    });
   };
 
   return (
@@ -91,10 +130,16 @@ const ManageUser = () => {
                     </td>
 
                     <td class="px-6 py-4 text-right flex gap-3">
-                      <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                      <button
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        onClick={() => handleEditUser(user)}
+                      >
                         Edit
                       </button>
-                      <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                      <button
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        onClick={() => handleDeleteUser(user)}
+                      >
                         Delete
                       </button>
                       <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline">

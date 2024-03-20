@@ -13,12 +13,12 @@ router.get("/logout", userController.handleLogout);
 router.post("/forgot-password", userController.handleForgotPassword);
 router.put("/reset-password", userController.handleResetPassword);
 router.get("/", [verifyJWT, isAdmin], userController.handleGetAllUser);
-router.delete("/", [verifyJWT, isAdmin], userController.handleDeleteUser);
 router.put("/update-user-current", verifyJWT, userController.handleUpdateUser);
 router.put("/update-address", verifyJWT, userController.handleUpdateAddress);
 router.put("/update-cart", verifyJWT, userController.handleUpdateCart);
+router.delete("/:uid", [verifyJWT, isAdmin], userController.handleDeleteUser);
 router.put(
-  "/:_id",
+  "/:uid",
   [verifyJWT, isAdmin],
   userController.handleUpdateUserByAdmin
 );

@@ -4,6 +4,7 @@ import { renderStarProduct } from "../utils/helpers";
 import Button from "./Button";
 import icons from "../utils/icons";
 import SelectQuantity from "./SelectQuantity";
+import DOMPurify from "dompurify";
 
 const { GoPlus, GrFormSubtract } = icons;
 
@@ -17,13 +18,25 @@ const InforProduct = ({ product }) => {
         ))}
       </span>
       <ul className="flex flex-col mt-2 list-square">
-        {product?.description?.map((item, index) => {
-          return (
-            <li key={index} className="text-[16px] text-gray-500">
-              {item}
-            </li>
-          );
-        })}
+        {product?.description?.length > 1 && (
+          <div>
+            {" "}
+            {product?.description?.map((item, index) => {
+              return (
+                <li key={index} className="text-[16px] text-gray-500">
+                  {item}
+                </li>
+              );
+            })}
+          </div>
+        )}
+        {product?.description?.length === 1 && (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(product?.description),
+            }}
+          ></div>
+        )}
       </ul>
 
       <div className="mt-4 flex items-center">

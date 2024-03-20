@@ -3,15 +3,26 @@ const Product = require("../models/product");
 const slugify = require("slugify");
 
 const handleCreateProduct = asyncHandler(async (req, res) => {
-  if (Object.keys(req.body).length === 0) {
+  const { title, brand, description, price, category, color } = req.body;
+  const thumb = req?.files?.thumb[0]?.path;
+  const images = req?.files?.image?.map((item) => item.path);
+  if (!(title && brand && description && price && category && color)) {
     throw new Error("Missing input");
   }
   if (req.body && req.body.title) {
     req.body.slug = slugify(req.body.title);
   }
+
+  if (thumb) {
+    req.body.thumb = thumb;
+  }
+  if (images) {
+    req.body.images = images;
+  }
   const product = await Product.create(req.body);
   return res.status(200).json({
     success: product ? true : false,
+    product: product,
     mes: product ? "Create a product successfully" : "Create a product failed",
   });
 });
