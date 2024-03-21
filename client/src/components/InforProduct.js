@@ -32,6 +32,7 @@ const InforProduct = ({ product }) => {
         )}
         {product?.description?.length === 1 && (
           <div
+            className="line-clamp-[10] mb-8"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(product?.description),
             }}

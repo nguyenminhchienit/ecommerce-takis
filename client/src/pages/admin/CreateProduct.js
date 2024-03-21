@@ -2,12 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import InputForm from "../../components/Input/InputForm";
 import SelectForm from "../../components/Input/SelectForm";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Button from "../../components/Button";
 import MarkdownEditor from "../../components/MarkdownEditor";
 import { convertFileToBase64, validate } from "../../utils/helpers";
 import { toast } from "react-toastify";
 import { apiCreateProduct } from "../../api/product";
+import Loading from "../../components/Loading";
+import { showModal } from "../../store/app/appSlice";
 
 const CreateProduct = () => {
   const {
@@ -17,6 +19,8 @@ const CreateProduct = () => {
     reset,
     watch,
   } = useForm();
+
+  const dispatch = useDispatch();
 
   const [preview, setPreview] = useState({
     thumb: "",
@@ -92,10 +96,20 @@ const CreateProduct = () => {
         }
       }
 
+      dispatch(showModal({ isShowModal: true, childrenModal: <Loading /> }));
       const response = await apiCreateProduct(formData);
+      dispatch(showModal({ isShowModal: false, childrenModal: null }));
 
       if (response.success) {
         toast.success(response.mes);
+        reset();
+        setPayload({
+          description: "",
+        });
+        setPreview({
+          thumb: "",
+          images: [],
+        });
       } else {
         toast.error(response.mes);
       }

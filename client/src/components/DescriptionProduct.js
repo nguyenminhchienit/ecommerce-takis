@@ -11,6 +11,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import path from "../utils/path";
 import Comment from "./Comment/Comment";
+import DOMPurify from "dompurify";
 
 function DescriptionProduct({ product, rerender }) {
   const [tabIndex, setTabIndex] = useState(0);
@@ -98,14 +99,26 @@ function DescriptionProduct({ product, rerender }) {
           </TabList>
 
           <TabPanel>
-            <ul className="flex flex-col ml-4 mt-2 list-square">
-              {product?.description?.map((item, index) => {
-                return (
-                  <li key={index} className="text-[16px] text-gray-500">
-                    {item}
-                  </li>
-                );
-              })}
+            <ul className="flex flex-col ml-4 mt-2 list-square text-[16px] text-gray-500">
+              {product?.description?.length > 1 && (
+                <div>
+                  {" "}
+                  {product?.description?.map((item, index) => {
+                    return (
+                      <li key={index} className="text-[16px] text-gray-500">
+                        {item}
+                      </li>
+                    );
+                  })}
+                </div>
+              )}
+              {product?.description?.length === 1 && (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(product?.description),
+                  }}
+                ></div>
+              )}
             </ul>
           </TabPanel>
           <TabPanel>

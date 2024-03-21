@@ -77,9 +77,22 @@ const handleGetAllProduct = asyncHandler(async (req, res) => {
     }));
     colorQueryObject = { $or: colorQuery };
   }
-  const q = { ...colorQueryObject, ...formatQuery };
 
-  let queryCommand = Product.find(q);
+  let queryObj = {};
+  if (queries?.q) {
+    delete formatQuery.q;
+    queryObj = {
+      $or: [
+        { title: { $regex: queries.q, $options: "i" } },
+        { category: { $regex: queries.q, $options: "i" } },
+        { brand: { $regex: queries.q, $options: "i" } },
+      ],
+    };
+  }
+
+  const qr = { ...colorQueryObject, ...formatQuery, ...queryObj };
+
+  let queryCommand = Product.find(qr);
 
   //Sorting
   if (req.query.sort) {
@@ -102,7 +115,7 @@ const handleGetAllProduct = asyncHandler(async (req, res) => {
 
   queryCommand
     .then(async (products) => {
-      const counts = await Product.find(q).countDocuments();
+      const counts = await Product.find(qr).countDocuments();
       return res.status(200).json({
         success: products ? true : false,
         products: products ? products : "Get all product failed",
