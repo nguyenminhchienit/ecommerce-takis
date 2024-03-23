@@ -26,6 +26,10 @@ router.put(
 router.put(
   "/:pid",
   [verifyJWT, isAdmin],
+  uploadCloud.fields([
+    { name: "image", maxCount: 10 },
+    { name: "thumb", maxCount: 1 },
+  ]),
   productController.handleUpdateProductById
 );
 router.delete(

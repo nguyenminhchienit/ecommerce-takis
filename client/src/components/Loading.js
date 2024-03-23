@@ -3,7 +3,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 const Loading = () => {
   return (
-    <div>
+    <div className="z-50">
       <ClipLoader color="#12CBC4" />
     </div>
   );

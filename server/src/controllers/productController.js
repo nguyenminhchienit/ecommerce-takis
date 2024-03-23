@@ -132,15 +132,26 @@ const handleUpdateProductById = asyncHandler(async (req, res) => {
   if (!pid) {
     throw new Error("Missing product id");
   }
+  const files = req?.files;
+  console.log("file : ", files);
+  if (files?.thumb) {
+    req.body.thumb = files?.thumb[0]?.path;
+  }
+  if (files?.image) {
+    req.body.images = files?.image?.map((item) => item.path);
+  }
   if (req.body && req.body.title) {
     req.body.slug = slugify(req.body.title);
   }
+
   const product = await Product.findByIdAndUpdate({ _id: pid }, req.body, {
     new: true,
   });
+
   return res.status(200).json({
     success: product ? true : false,
     data: product ? product : "Update a product failed",
+    mes: product ? "Updated success" : "Update a product failed",
   });
 });
 

@@ -11,6 +11,7 @@ const SelectForm = ({
   style,
   fw,
   defaultValue,
+  edit,
 }) => {
   return (
     <div className={clsx("flex flex-col gap-1 w-full my-4", style)}>
@@ -23,7 +24,11 @@ const SelectForm = ({
       >
         <option value="">Choose</option>
         {options?.map((item, index) => {
-          return <option value={item.value}>{item.text}</option>;
+          return (
+            <option key={index} value={item.value}>
+              {item.text}
+            </option>
+          );
         })}
       </select>
       {errors[id] && (

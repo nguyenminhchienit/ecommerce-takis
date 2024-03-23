@@ -7,6 +7,7 @@ const Button = ({
   iconBefore,
   iconAfter,
   fw,
+  color,
   type = "button",
 }) => {
   return (
@@ -17,7 +18,7 @@ const Button = ({
           ? style
           : `px-4 py-2 my-2 rounded-md text-white bg-main w-full font-semibold ${
               fw ? "w-full" : "w-fit"
-            }`
+            } ${color ? color : ""}`
       }
       onClick={() => handleOnClick && handleOnClick()}
     >
