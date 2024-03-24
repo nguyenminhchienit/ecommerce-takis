@@ -15,6 +15,10 @@ import { toast } from "react-toastify";
 import { apiGetProducts, apiDeleteProduct } from "../../api/product";
 import UpdateProduct from "./UpdateProduct";
 import Swal from "sweetalert2";
+import { FaRegEdit } from "react-icons/fa";
+import { AiOutlineDelete } from "react-icons/ai";
+import { MdAddComment } from "react-icons/md";
+import AddVariants from "./AddVariants";
 
 const ManageProduct = () => {
   const {
@@ -27,6 +31,7 @@ const ManageProduct = () => {
 
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState(null);
+  const [customizeVariants, setCustomizeVariants] = useState(null);
   const [update, setUpdate] = useState(false);
 
   const [params] = useSearchParams();
@@ -92,6 +97,15 @@ const ManageProduct = () => {
           <UpdateProduct
             product={product}
             setProduct={setProduct}
+            render={render}
+          />
+        </div>
+      )}
+      {customizeVariants && (
+        <div className="absolute inset-0 bg-gray-200 min-h-screen z-50">
+          <AddVariants
+            customizeVariants={customizeVariants}
+            setCustomizeVariants={setCustomizeVariants}
             render={render}
           />
         </div>
@@ -171,18 +185,24 @@ const ManageProduct = () => {
                     <td class="px-6 py-4">{p.quantity}</td>
 
                     <td class="px-6 py-4">{p.sold}</td>
-                    <td class="px-6 py-4 flex items-center justify-center flex-wrap">
+                    <td class="px-6 py-4 flex items-center justify-center flex-wrap gap-2">
                       <button
                         onClick={() => setProduct(p)}
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline my-3"
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline my-3 hover:text-orange-500"
                       >
-                        Edit
+                        <FaRegEdit size={20} />
                       </button>
                       <button
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline hover:text-orange-500"
                         onClick={() => handleDeleteProduct(p._id)}
                       >
-                        Delete
+                        <AiOutlineDelete size={20} />
+                      </button>
+                      <button
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline hover:text-orange-500"
+                        onClick={() => setCustomizeVariants(p)}
+                      >
+                        <MdAddComment size={20} />
                       </button>
                     </td>
                   </tr>

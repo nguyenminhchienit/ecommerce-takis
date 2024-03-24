@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/product");
 const slugify = require("slugify");
+const makeSKU = require("uniqid");
 
 const handleCreateProduct = asyncHandler(async (req, res) => {
   const { title, brand, description, price, category, color } = req.body;
@@ -245,7 +246,41 @@ const handleUploadImgProduct = asyncHandler(async (req, res) => {
   });
 });
 
+const handelAddVariants = asyncHandler(async (req, res) => {
+  const { pid } = req.params;
+  if (!pid) {
+    throw new Error("Missing input");
+  }
+  const { title, price, color } = req.body;
+  const thumb = req?.files?.thumb[0]?.path;
+  const images = req?.files?.image?.map((item) => item.path);
+  if (!(title && price && color)) {
+    throw new Error("Missing input");
+  }
+  const response = await Product.findByIdAndUpdate(
+    pid,
+    {
+      $push: {
+        variants: {
+          color,
+          price,
+          thumb,
+          images,
+          title,
+          sku: makeSKU().toLocaleLowerCase(),
+        },
+      },
+    },
+    { new: true }
+  );
+  return res.status(200).json({
+    success: response ? true : false,
+    mes: response ? "Add variants success" : "Can't add variants products",
+  });
+});
+
 module.exports = {
+  handelAddVariants,
   handleCreateProduct,
   handleGetProductById,
   handleGetAllProduct,

@@ -45,3 +45,11 @@ export const apiDeleteProduct = (pid) => {
     method: "delete",
   });
 };
+
+export const apiAddVariants = (data, pid) => {
+  return axios({
+    url: `/product/variants/${pid}`,
+    method: "put",
+    data,
+  });
+};

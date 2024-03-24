@@ -18,6 +18,16 @@ router.get("/", productController.handleGetAllProduct);
 router.put("/rating", verifyJWT, productController.handleRatings);
 
 router.put(
+  "/variants/:pid",
+  [verifyJWT, isAdmin],
+  uploadCloud.fields([
+    { name: "image", maxCount: 10 },
+    { name: "thumb", maxCount: 1 },
+  ]),
+  productController.handelAddVariants
+);
+
+router.put(
   "/upload-img/:pid",
   [verifyJWT, isAdmin],
   uploadCloud.array("image", 10),

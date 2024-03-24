@@ -20,12 +20,19 @@ const settings = {
 };
 
 const DetailProduct = () => {
-  const { pid, title, category } = useParams();
+  const { pid, category } = useParams();
 
   const [product, setProduct] = useState({});
   const [products, setProducts] = useState([]);
   const [image, setImage] = useState("");
   const [update, setUpdate] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState({
+    title: "",
+    price: "",
+    color: "",
+    thumb: "",
+    images: [],
+  });
 
   const fetchProduct = async () => {
     const response = await apiGetProduct(pid);
@@ -64,41 +71,65 @@ const DetailProduct = () => {
   const rerender = useCallback(() => {
     setUpdate(!update);
   }, [update]);
+
   return (
     <div className="">
       <div className="w-full bg-gray-100 h-[70px] flex justify-center flex-col mt-3">
         <div className="ml-2">
-          <div>{title}</div>
-          <Breadcrumbs title={title} category={category} />
+          <div>{currentProduct?.title || product?.title}</div>
+          <Breadcrumbs
+            title={currentProduct?.title || product?.title}
+            category={category}
+          />
         </div>
       </div>
 
       <div className="flex mt-4">
         <div className="w-2/5 flex-col items-center">
           <img
-            src={image || product?.thumb}
+            src={image || currentProduct?.thumb || product?.thumb}
             alt="product"
             className="w-[400px] h-[420px] object-cover border"
           />
           <div className="mt-4">
             <Slider className="image-slider" {...settings}>
-              {product?.images?.map((item) => {
-                return (
-                  <div>
-                    <img
-                      src={item}
-                      alt="item"
-                      className="w-[120px] h-[120px] object-cover border p-2"
-                      onClick={() => handleClickImage(item)}
-                    />
-                  </div>
-                );
-              })}
+              {currentProduct?.images?.length === 0 ||
+                product?.images?.map((item) => {
+                  return (
+                    <div>
+                      <img
+                        src={item}
+                        alt="item"
+                        className="w-[120px] h-[120px] object-cover border p-2"
+                        onClick={() => handleClickImage(item)}
+                      />
+                    </div>
+                  );
+                })}
+
+              {currentProduct?.images?.length > 0 ||
+                currentProduct?.images?.map((item) => {
+                  return (
+                    <div>
+                      <img
+                        src={item}
+                        alt="item"
+                        className="w-[120px] h-[120px] object-cover border p-2"
+                        onClick={() => handleClickImage(item)}
+                      />
+                    </div>
+                  );
+                })}
             </Slider>
           </div>
         </div>
         <div className="w-2/5 ml-4">
-          <InforProduct product={product} />
+          <InforProduct
+            product={product}
+            setCurrentProduct={setCurrentProduct}
+            currentProduct={currentProduct}
+            setImage={setImage}
+          />
         </div>
         <div className="w-1/5 flex flex-col gap-2">
           <CardInfo
