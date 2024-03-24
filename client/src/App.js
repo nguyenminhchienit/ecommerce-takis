@@ -28,7 +28,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Modal from "./components/Modal/Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import History from "../src/pages/private/History";
+import Wishlist from "../src/pages/private/WishList";
+import MyCart from "../src/pages/private/MyCart";
 function App() {
   const dispatch = useDispatch();
   const { isShowModal, childrenModal } = useSelector((state) => state.app);
@@ -63,6 +65,9 @@ function App() {
         {/* Member */}
         <Route path={path.MEMBER} element={<MemberLayout />}>
           <Route path={path.PERSONAL} element={<Personal />} />
+          <Route path={path.HISTORY} element={<History />} />
+          <Route path={path.WISHLIST} element={<Wishlist />} />
+          <Route path={path.MY_CART} element={<MyCart />} />
         </Route>
         {/* Login */}
         <Route path={path.LOGIN} element={<Login />} />

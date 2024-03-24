@@ -24,7 +24,7 @@ const InputForm = ({
         disabled={disabled}
         placeholder={placeholder}
         defaultValue={defaultValue}
-        className={clsx("form-input", fw && "w-full")}
+        className={clsx("form-input rounded-md", fw && "w-full")}
       />
       {errors[id] && (
         <small className="text-red-500 pt-1">{errors[id]?.message}</small>

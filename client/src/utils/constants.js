@@ -120,3 +120,36 @@ export const adminSidebar = [
     icon: <FaMoneyBills size={24} />,
   },
 ];
+
+export const memberSidebar = [
+  {
+    id: 1,
+    type: "SINGLE",
+    text: "Personal",
+    path: `/${path.MEMBER}/${path.PERSONAL}`,
+    icon: <RxDashboard size={24} />,
+  },
+  {
+    id: 2,
+    type: "SINGLE",
+    text: "My cart",
+    path: `/${path.MEMBER}/${path.MY_CART}`,
+    icon: <MdManageAccounts size={24} />,
+  },
+
+  {
+    id: 3,
+    type: "SINGLE",
+    text: "Buy history",
+    path: `/${path.MEMBER}/${path.HISTORY}`,
+    icon: <FaMoneyBills size={24} />,
+  },
+
+  {
+    id: 4,
+    type: "SINGLE",
+    text: "Wishlist",
+    path: `/${path.MEMBER}/${path.WISHLIST}`,
+    icon: <FaMoneyBills size={24} />,
+  },
+];
