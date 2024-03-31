@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "../../components/Button";
 import InputForm from "../../components/Input/InputForm";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
+import { apiUpdateUserCurrent } from "../../api/user";
 import { convertFileToBase64 } from "../../utils/helpers";
+import { apiGetUserCurrent } from "../../store/user/asyncActions";
+import { toast } from "react-toastify";
 
 const Personal = () => {
   const { current } = useSelector((state) => state.user);
@@ -14,10 +17,12 @@ const Personal = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     watch,
   } = useForm();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     reset({
@@ -35,13 +40,29 @@ const Personal = () => {
   };
 
   useEffect(() => {
-    if (watch("avatar")?.length > 0) {
+    if (watch("avatar")?.length > 0 && watch("avatar") instanceof FileList) {
       handlePreviewThumb(watch("avatar")[0]);
     }
   }, [watch("avatar")]);
 
   const handleUpdatePersonal = async (data) => {
-    console.log("Data: ", data);
+    const formData = new FormData();
+
+    if (data.avatar.length > 0) {
+      formData.append("avatar", data.avatar[0]);
+    }
+    delete data.avatar;
+    for (let i of Object.entries(data)) {
+      formData.append(i[0], i[1]);
+    }
+
+    const response = await apiUpdateUserCurrent(formData);
+    if (response?.success) {
+      dispatch(apiGetUserCurrent());
+      toast.success(response.mes);
+    } else {
+      toast.error(response.mes);
+    }
   };
   return (
     <div className="w-full">
@@ -90,11 +111,17 @@ const Personal = () => {
             style={"mt-2 flex-auto"}
             placeholder={"Phone"}
             errors={errors}
-            validate={{ required: "Require" }}
+            validate={{
+              required: "Require",
+              pattern: {
+                value: `/(84|0[3|5|7|8|9])+([0-9]{8})\b/g;`,
+                message: "Phone invalid",
+              },
+            }}
           />
 
           <div className="flex gap-1 flex-col">
-            <label htmlFor="avatar">Upload thumb</label>
+            <label htmlFor="avatar">Upload avatar</label>
             <input
               type="file"
               accept="image/*"
@@ -117,8 +144,17 @@ const Personal = () => {
             </div>
           )}
 
-          <Button name={"Update information"} type="submit" />
+          {!preview.avatar && (
+            <div>
+              <img
+                src={current?.avatar}
+                alt="avatar"
+                className="my-4 w-[100px] h-[100px] object-cover rounded-full border border-main"
+              />
+            </div>
+          )}
 
+          {isDirty && <Button name={"Update information"} type="submit" />}
           <div className="flex gap-3">
             <span>Role: </span>
             <span>{current?.role === "admin" ? "Admin" : "User"}</span>

@@ -55,7 +55,6 @@ const Login = () => {
 
   const handleSubmit = useCallback(async () => {
     const { firstName, lastName, mobile, ...data } = payload;
-    console.log("Check register: ", payload);
     const invalids = isRegister
       ? validate(payload, setInValidField)
       : validate(data, setInValidField);

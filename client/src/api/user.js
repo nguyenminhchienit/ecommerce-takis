@@ -62,3 +62,11 @@ export const apiDeleteUser = (uid) => {
     method: "delete",
   });
 };
+
+export const apiUpdateUserCurrent = (data) => {
+  return axios({
+    url: "/user/update-user-current",
+    method: "put",
+    data,
+  });
+};

@@ -143,6 +143,7 @@ const handleLogin = asyncHandler(async (req, res) => {
 
 const handleGetUserCurrent = asyncHandler(async (req, res) => {
   const { _id } = req.user;
+
   if (!_id) {
     return res.status(400).json({
       success: false,
@@ -343,7 +344,7 @@ const handleGetAllUser = asyncHandler(async (req, res) => {
 
 const handleDeleteUser = asyncHandler(async (req, res) => {
   const { uid } = req.params;
-  if (!undefinedid) {
+  if (!uid) {
     throw new Error("Missing params");
   }
   const user = await User.findByIdAndDelete({ _id: uid });
@@ -358,6 +359,9 @@ const handleUpdateUser = asyncHandler(async (req, res) => {
   if (!_id || Object.keys(req.body).length === 0) {
     throw new Error("Missing input");
   }
+  if (req.file) {
+    req.body.avatar = req.file.path;
+  }
   const user = await User.findByIdAndUpdate(
     {
       _id: _id,
@@ -367,7 +371,7 @@ const handleUpdateUser = asyncHandler(async (req, res) => {
   ).select("-password -role -refreshToken");
   return res.status(200).json({
     success: user ? true : false,
-    data: user ? user : "Something wrong",
+    mes: user ? "Updated" : "Something wrong",
   });
 });
 
