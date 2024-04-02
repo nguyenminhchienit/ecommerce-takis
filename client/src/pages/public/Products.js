@@ -60,6 +60,7 @@ const Products = () => {
       delete queries.to;
     }
     const q = { ...priceQuery, ...queries };
+    console.log("q: ", q);
     fetchProducts(q);
     window.scrollTo(0, 0);
   }, [params]);

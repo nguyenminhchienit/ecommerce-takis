@@ -17,7 +17,7 @@ const ModalVote = ({ nameProduct, handleSubmitRatings }) => {
     <div
       onClick={(e) => e.stopPropagation()}
       ref={modalRef}
-      className="bg-white p-6 rounded-md shadow-sm flex flex-col gap-4 items-center justify-center"
+      className="bg-white p-6 rounded-md shadow-sm flex flex-col gap-4 items-center justify-center z-50"
     >
       <img src={logo} alt="logo" />
       <h2 className="text-center text-medium">{`Rating product ${nameProduct}`}</h2>

@@ -19,7 +19,7 @@ const settings = {
   autoplay: true,
 };
 
-const DetailProduct = () => {
+const DetailProduct = ({ isQuickView }) => {
   const { pid, category } = useParams();
 
   const [product, setProduct] = useState({});
@@ -73,16 +73,18 @@ const DetailProduct = () => {
   }, [update]);
 
   return (
-    <div className="">
-      <div className="w-full bg-gray-100 h-[70px] flex justify-center flex-col mt-3">
-        <div className="ml-2">
-          <div>{currentProduct?.title || product?.title}</div>
-          <Breadcrumbs
-            title={currentProduct?.title || product?.title}
-            category={category}
-          />
+    <div className="bg-white w-full z-100">
+      {isQuickView && (
+        <div className="w-full bg-gray-100 h-[70px] flex justify-center flex-col mt-3">
+          <div className="ml-2">
+            <div>{currentProduct?.title || product?.title}</div>
+            <Breadcrumbs
+              title={currentProduct?.title || product?.title}
+              category={category}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex mt-4">
         <div className="w-2/5 flex-col items-center">
@@ -123,57 +125,65 @@ const DetailProduct = () => {
             </Slider>
           </div>
         </div>
-        <div className="w-2/5 ml-4">
-          <InforProduct
-            product={product}
-            setCurrentProduct={setCurrentProduct}
-            currentProduct={currentProduct}
-            setImage={setImage}
-          />
-        </div>
-        <div className="w-1/5 flex flex-col gap-2">
-          <CardInfo
-            icon={<FaShieldAlt color="gray" size={30} />}
-            title={"Guarantee"}
-            description={"Quality Checked"}
-          />
+        {isQuickView && (
+          <>
+            <div className="w-2/5 ml-4">
+              <InforProduct
+                product={product}
+                setCurrentProduct={setCurrentProduct}
+                currentProduct={currentProduct}
+                setImage={setImage}
+              />
+            </div>
+            <div className="w-1/5 flex flex-col gap-2">
+              <CardInfo
+                icon={<FaShieldAlt color="gray" size={30} />}
+                title={"Guarantee"}
+                description={"Quality Checked"}
+              />
 
-          <CardInfo
-            icon={<BsCarFrontFill color="gray" size={30} />}
-            title={"Free Shipping"}
-            description={"Free On All Products"}
-          />
+              <CardInfo
+                icon={<BsCarFrontFill color="gray" size={30} />}
+                title={"Free Shipping"}
+                description={"Free On All Products"}
+              />
 
-          <CardInfo
-            icon={<FaGift color="gray" size={30} />}
-            title={"Special Gift Cards"}
-            description={"Special Gift Cards"}
-          />
+              <CardInfo
+                icon={<FaGift color="gray" size={30} />}
+                title={"Special Gift Cards"}
+                description={"Special Gift Cards"}
+              />
 
-          <CardInfo
-            icon={<GiReturnArrow color="gray" size={30} />}
-            title={"Free Return"}
-            description={"Within 7 Days"}
-          />
+              <CardInfo
+                icon={<GiReturnArrow color="gray" size={30} />}
+                title={"Free Return"}
+                description={"Within 7 Days"}
+              />
 
-          <CardInfo
-            icon={<MdLocalPhone color="gray" size={30} />}
-            title={"Consultancy"}
-            description={"Lifetime 24/7/356"}
-          />
-        </div>
+              <CardInfo
+                icon={<MdLocalPhone color="gray" size={30} />}
+                title={"Consultancy"}
+                description={"Lifetime 24/7/356"}
+              />
+            </div>
+          </>
+        )}
       </div>
 
-      <div>
-        <DescriptionProduct product={product} rerender={rerender} />
-      </div>
-
-      <div className="mt-8">
-        <div className="uppercase font-semibold text-[20px] border-main border-b-2 mb-4">
-          OTHER CUSTOMERS ALSO BUY
+      {isQuickView && (
+        <div>
+          <DescriptionProduct product={product} rerender={rerender} />
         </div>
-        <SliderProduct products={products} />
-      </div>
+      )}
+
+      {isQuickView && (
+        <div className="mt-8">
+          <div className="uppercase font-semibold text-[20px] border-main border-b-2 mb-4">
+            OTHER CUSTOMERS ALSO BUY
+          </div>
+          <SliderProduct products={products} />
+        </div>
+      )}
     </div>
   );
 };

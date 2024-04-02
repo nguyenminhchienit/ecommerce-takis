@@ -414,12 +414,12 @@ const handleUpdateAddress = asyncHandler(async (req, res) => {
 
 const handleUpdateCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
-  const { pid, quantity, color } = req.body;
-  if (!pid || !quantity || !color) {
+  const { pid, quantity = 1, color } = req.body;
+  if (!pid || !color) {
     throw new Error("Missing input");
   }
   const userCart = await User.findById(_id);
-  console.log("Check user in product cart: ", userCart);
+
   const alreadyProduct = userCart?.cart?.find(
     (el) => el.product.toString() === pid
   );
@@ -432,7 +432,7 @@ const handleUpdateCart = asyncHandler(async (req, res) => {
       );
       return res.status(200).json({
         success: response ? true : false,
-        data: response ? response : "Something wrong",
+        data: response ? "Added to cart" : "Something wrong",
       });
     } else {
       const response = await User.findByIdAndUpdate(
@@ -441,10 +441,10 @@ const handleUpdateCart = asyncHandler(async (req, res) => {
         },
         { $push: { cart: { product: pid, quantity, color } } },
         { new: true }
-      ).select("-password -role -refreshToken");
+      ).select("-password -roleId");
       return res.status(200).json({
         success: response ? true : false,
-        data: response ? response : "Something wrong",
+        data: response ? "Added to cart" : "Something wrong",
       });
     }
   } else {
@@ -454,12 +454,39 @@ const handleUpdateCart = asyncHandler(async (req, res) => {
       },
       { $push: { cart: { product: pid, quantity, color } } },
       { new: true }
-    ).select("-password -role -refreshToken");
+    ).select("-password -roleId");
     return res.status(200).json({
       success: response ? true : false,
-      data: response ? response : "Something wrong",
+      data: response ? "Added to cart" : "Something wrong",
     });
   }
+});
+
+const handleRemoveInCart = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { pid } = req.params;
+
+  const userCart = await User.findById(_id);
+  const alreadyProduct = userCart?.cart?.find(
+    (el) => el.product.toString() === pid
+  );
+  if (!alreadyProduct) {
+    return res.status(200).json({
+      success: true,
+      data: response ? "Updated your cart" : "Something wrong",
+    });
+  }
+  const response = await User.findByIdAndUpdate(
+    {
+      _id: _id,
+    },
+    { $pull: { cart: { product: pid } } },
+    { new: true }
+  ).select("-password -roleId");
+  return res.status(200).json({
+    success: response ? true : false,
+    data: response ? "Updated your cart" : "Something wrong",
+  });
 });
 
 module.exports = {
@@ -478,4 +505,5 @@ module.exports = {
   handleUpdateCart,
   handleRegisterWithAuthEMail,
   handleFinalRegister,
+  handleRemoveInCart,
 };

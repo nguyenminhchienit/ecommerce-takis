@@ -39,7 +39,7 @@ function App() {
     dispatch(apiGetCategories());
   }, []);
   return (
-    <div className="font-main relative">
+    <div className="font-main relative h-screen">
       {isShowModal && <Modal>{childrenModal}</Modal>}
       <Routes>
         <Route path={path.PUBLIC} element={<Public />}>

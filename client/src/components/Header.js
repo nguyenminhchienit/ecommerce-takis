@@ -41,7 +41,7 @@ const Header = () => {
           <>
             <div className="flex items-center justify-center gap-2 px-4 border-r">
               <BsFillHandbagFill color="red" />
-              <span>0 item</span>
+              <span>{current?.cart?.length || 0} item</span>
             </div>
             <Menu as="div" className="relative inline-block text-left pl-1">
               <div className="flex items-center justify-center gap-2 px-4 border-r">

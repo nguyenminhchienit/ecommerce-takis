@@ -1,6 +1,11 @@
 import { MdLocalPhone } from "react-icons/md";
 import { IoMdMail, IoIosArrowForward } from "react-icons/io";
-import { BsFillHandbagFill, BsCarFrontFill } from "react-icons/bs";
+import {
+  BsFillHandbagFill,
+  BsCarFrontFill,
+  BsFillCartCheckFill,
+  BsCartPlusFill,
+} from "react-icons/bs";
 import { HiMiniUserCircle } from "react-icons/hi2";
 import {
   FaHome,
@@ -11,6 +16,7 @@ import {
   FaShieldAlt,
   FaGift,
   FaSortDown,
+  FaCartPlus,
 } from "react-icons/fa";
 import { TbCategoryFilled, TbLogout2 } from "react-icons/tb";
 import {
@@ -55,6 +61,9 @@ const icons = {
   MdManageAccounts,
   MdOutlineProductionQuantityLimits,
   FaMoneyBills,
+  FaCartPlus,
+  BsFillCartCheckFill,
+  BsCartPlusFill,
 };
 
 export default icons;
