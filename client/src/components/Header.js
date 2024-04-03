@@ -3,8 +3,9 @@ import logo from "../assets/images/logo.png";
 import icons from "../utils/icons";
 import { Link } from "react-router-dom";
 import path from "../utils/path";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
+import { showCart } from "../store/app/appSlice";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -13,6 +14,7 @@ function classNames(...classes) {
 const Header = () => {
   const { MdLocalPhone, IoMdMail, HiMiniUserCircle, BsFillHandbagFill } = icons;
   const { isLoggedIn, current } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   return (
     <div className="flex justify-between w-main h-[80px] py-[25px]">
       <div>
@@ -41,7 +43,12 @@ const Header = () => {
           <>
             <div className="flex items-center justify-center gap-2 px-4 border-r">
               <BsFillHandbagFill color="red" />
-              <span>{current?.cart?.length || 0} item</span>
+              <span
+                className="cursor-pointer"
+                onClick={() => dispatch(showCart())}
+              >
+                {current?.cart?.length || 0} item
+              </span>
             </div>
             <Menu as="div" className="relative inline-block text-left pl-1">
               <div className="flex items-center justify-center gap-2 px-4 border-r">

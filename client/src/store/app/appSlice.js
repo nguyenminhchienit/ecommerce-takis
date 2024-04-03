@@ -9,11 +9,15 @@ const appSlice = createSlice({
     errorMessage: "",
     isShowModal: false,
     childrenModal: null,
+    isShowCart: false,
   },
   reducers: {
     showModal: (state, action) => {
       state.isShowModal = action.payload.isShowModal;
       state.childrenModal = action.payload.childrenModal;
+    },
+    showCart: (state) => {
+      state.isShowCart = state.isShowCart === false ? true : false;
     },
   },
   // Code logic xử lý async action
@@ -41,5 +45,5 @@ const appSlice = createSlice({
   },
 });
 
-export const { showModal } = appSlice.actions;
+export const { showModal, showCart } = appSlice.actions;
 export default appSlice.reducer;

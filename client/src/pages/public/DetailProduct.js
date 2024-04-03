@@ -19,7 +19,7 @@ const settings = {
   autoplay: true,
 };
 
-const DetailProduct = ({ isQuickView }) => {
+const DetailProduct = ({ isQuickView = true }) => {
   const { pid, category } = useParams();
 
   const [product, setProduct] = useState({});

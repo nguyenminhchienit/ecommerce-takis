@@ -31,15 +31,28 @@ import "react-toastify/dist/ReactToastify.css";
 import History from "../src/pages/private/History";
 import Wishlist from "../src/pages/private/WishList";
 import MyCart from "../src/pages/private/MyCart";
+import Cart from "./components/Cart";
+import { showCart } from "./store/app/appSlice";
+import DetailCart from "./pages/public/DetailCart";
 function App() {
   const dispatch = useDispatch();
-  const { isShowModal, childrenModal } = useSelector((state) => state.app);
+  const { isShowModal, childrenModal, isShowCart } = useSelector(
+    (state) => state.app
+  );
 
   useEffect(() => {
     dispatch(apiGetCategories());
   }, []);
   return (
     <div className="font-main relative h-screen">
+      {isShowCart && (
+        <div
+          onClick={() => dispatch(showCart())}
+          className="absolute inset-0 z-50 flex justify-end bg-blend-overlay"
+        >
+          <Cart />
+        </div>
+      )}
       {isShowModal && <Modal>{childrenModal}</Modal>}
       <Routes>
         <Route path={path.PUBLIC} element={<Public />}>
@@ -49,6 +62,7 @@ function App() {
           <Route path={path.FAQs} element={<FAQ />} />
           <Route path={path.OUR_SERVICE} element={<Services />} />
           <Route path={path.PRODUCT__CATEGORY} element={<ProductCategory />} />
+          <Route path={path.DETAIL_CART} element={<DetailCart />} />
           <Route
             path={path.DETAIL_PRODUCT__CATEGORY__PID__TITLE}
             element={<DetailProduct />}

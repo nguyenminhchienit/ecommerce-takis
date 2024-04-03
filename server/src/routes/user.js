@@ -22,16 +22,17 @@ router.put(
 );
 router.put("/update-address", verifyJWT, userController.handleUpdateAddress);
 router.put("/update-cart", verifyJWT, userController.handleUpdateCart);
-router.delete(
-  "/remove-cart/:pid",
-  [verifyJWT],
-  userController.handleRemoveInCart
-);
+
 router.delete("/:uid", [verifyJWT, isAdmin], userController.handleDeleteUser);
 router.put(
   "/:uid",
   [verifyJWT, isAdmin],
   userController.handleUpdateUserByAdmin
+);
+router.delete(
+  "/remove-cart/:pid/:color",
+  [verifyJWT],
+  userController.handleRemoveInCart
 );
 
 module.exports = router;

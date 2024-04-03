@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import formatPrice from "../utils/formatPrice";
 import { renderStarProduct } from "../utils/helpers";
 import Button from "./Button";
-import icons from "../utils/icons";
 import SelectQuantity from "./SelectQuantity";
 import DOMPurify from "dompurify";
 import clsx from "clsx";
-
-const { GoPlus, GrFormSubtract } = icons;
+import { useDispatch, useSelector } from "react-redux";
+import { createSearchParams, useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import path from "../utils/path";
+import { apiUpdateCart } from "../api/user";
+import { toast } from "react-toastify";
+import { apiGetUserCurrent } from "../store/user/asyncActions";
 
 const InforProduct = ({
   product,
@@ -16,16 +20,68 @@ const InforProduct = ({
   setImage,
 }) => {
   const [variants, setVariants] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const { current } = useSelector((state) => state.user);
+
+  const handleSetQuantity = (data) => {
+    setQuantity(data);
+  };
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
 
   useEffect(() => {
     setCurrentProduct({
       title: product?.variants?.find((item) => item._id === variants)?.title,
+
       color: product?.variants?.find((item) => item._id === variants)?.color,
+
       price: product?.variants?.find((item) => item._id === variants)?.price,
+
       thumb: product?.variants?.find((item) => item._id === variants)?.thumb,
+
       images: product?.variants?.find((item) => item._id === variants)?.images,
     });
   }, [variants]);
+
+  const handleAddToCart = async () => {
+    console.log("cr cart: ", current?.cart);
+    if (!current) {
+      Swal.fire({
+        title: "Almost...",
+        text: "You must login before add to cart",
+        cancelButtonText: "Not now",
+        showCancelButton: true,
+        confirmButtonText: "Login",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate({
+            pathname: `/${path.LOGIN}`,
+            search: createSearchParams({
+              redirect: location.pathname,
+            }).toString(),
+          });
+        }
+      });
+    } else {
+      const response = await apiUpdateCart({
+        pid: product?._id,
+        color: currentProduct?.color || product?.color,
+        quantity,
+        price: currentProduct?.price || product?.price,
+        title: currentProduct?.title || product?.title,
+        thumbnail: currentProduct?.thumb || product?.thumb,
+      });
+      if (response?.success) {
+        toast.success(response?.data);
+        dispatch(apiGetUserCurrent());
+      } else {
+        toast.error(response?.data);
+      }
+    }
+  };
+
   return (
     <div className="mx-3">
       <h3 className="font-bold text-[24px]">
@@ -100,15 +156,12 @@ const InforProduct = ({
       <div className="mt-4 flex items-center">
         <span className="font-semibold mr-4">Quantity</span>
         <div className="flex items-center">
-          {/* <GrFormSubtract size={30} />
-          <span className="mx-4 text-[24px]">{quantity}</span>
-          <GoPlus size={30} /> */}
-          <SelectQuantity />
+          <SelectQuantity onQuantity={handleSetQuantity} />
         </div>
       </div>
 
       <div className="mt-4">
-        <Button name={"ADD TO CARD"} />
+        <Button name={"ADD TO CARD"} handleOnClick={handleAddToCart} />
       </div>
     </div>
   );

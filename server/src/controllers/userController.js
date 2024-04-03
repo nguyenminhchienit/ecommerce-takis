@@ -150,9 +150,15 @@ const handleGetUserCurrent = asyncHandler(async (req, res) => {
       mes: "Missing params",
     });
   }
-  const user = await User.findById({ _id: _id }).select(
-    "-refreshToken -password"
-  );
+  const user = await User.findById({ _id: _id })
+    .select("-refreshToken -password")
+    .populate({
+      path: "cart",
+      populate: {
+        path: "product",
+        select: "title thumb price",
+      },
+    });
   if (user) {
     return res.status(200).json({
       success: true,
@@ -414,14 +420,14 @@ const handleUpdateAddress = asyncHandler(async (req, res) => {
 
 const handleUpdateCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
-  const { pid, quantity = 1, color } = req.body;
+  const { pid, quantity = 1, color, thumbnail, title, price } = req.body;
   if (!pid || !color) {
     throw new Error("Missing input");
   }
   const userCart = await User.findById(_id);
 
   const alreadyProduct = userCart?.cart?.find(
-    (el) => el.product.toString() === pid
+    (el) => el.product.toString() === pid && el.color === color
   );
   if (alreadyProduct) {
     if (alreadyProduct.color == color) {
@@ -439,7 +445,11 @@ const handleUpdateCart = asyncHandler(async (req, res) => {
         {
           _id: _id,
         },
-        { $push: { cart: { product: pid, quantity, color } } },
+        {
+          $push: {
+            cart: { product: pid, quantity, color, thumbnail, title, price },
+          },
+        },
         { new: true }
       ).select("-password -roleId");
       return res.status(200).json({
@@ -452,7 +462,11 @@ const handleUpdateCart = asyncHandler(async (req, res) => {
       {
         _id: _id,
       },
-      { $push: { cart: { product: pid, quantity, color } } },
+      {
+        $push: {
+          cart: { product: pid, quantity, color, thumbnail, title, price },
+        },
+      },
       { new: true }
     ).select("-password -roleId");
     return res.status(200).json({
@@ -464,11 +478,11 @@ const handleUpdateCart = asyncHandler(async (req, res) => {
 
 const handleRemoveInCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
-  const { pid } = req.params;
+  const { pid, color } = req.params;
 
   const userCart = await User.findById(_id);
   const alreadyProduct = userCart?.cart?.find(
-    (el) => el.product.toString() === pid
+    (el) => el.product.toString() === pid && el.color === color
   );
   if (!alreadyProduct) {
     return res.status(200).json({
@@ -480,7 +494,7 @@ const handleRemoveInCart = asyncHandler(async (req, res) => {
     {
       _id: _id,
     },
-    { $pull: { cart: { product: pid } } },
+    { $pull: { cart: { product: pid, color } } },
     { new: true }
   ).select("-password -roleId");
   return res.status(200).json({
